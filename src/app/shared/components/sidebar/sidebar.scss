@@ -1,0 +1,78 @@
+.sideBar {
+  width: 248px;
+  height: 100vh;
+  background-color: #20241f;
+  color: white;
+  padding: 30px 16px;
+  box-sizing: border-box;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: #20b89a;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-weight: bold;
+}
+
+.navigationBar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 100px);
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu a,
+.ownerModules a,
+.systemModules a {
+  color: #b7b9b5;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.menu a:hover,
+.ownerModules a:hover,
+.systemModules a:hover {
+  background-color: #28594e;
+  color: white;
+}
+
+.ownerModules {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ownerModules span {
+  color: #777b76;
+  font-size: 12px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.systemModules {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
