@@ -1,7 +1,7 @@
-<div class="app-layout">
-  <app-sidebar class="sidebar"></app-sidebar>
-  <div class="main-content">
-    <app-top-bar></app-top-bar>
-    <div class="page-content"></div>
-  </div>
-</div>
+<app-sidebar></app-sidebar>
+<main class="main-content">
+  <app-top-bar></app-top-bar>
+  <section class="page-content">
+    <router-outlet></router-outlet>
+  </section>
+</main>

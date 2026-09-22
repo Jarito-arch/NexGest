@@ -4,7 +4,7 @@ import { Sidebar } from './shared/components/sidebar/sidebar';
 import { TopBar } from './shared/components/top-bar/top-bar';
 
 @Component({
-  imports: [Sidebar, TopBar],
+  imports: [Sidebar, TopBar, RouterOutlet],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
