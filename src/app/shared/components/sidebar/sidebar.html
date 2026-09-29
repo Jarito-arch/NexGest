@@ -5,21 +5,27 @@
   </div>
 
   <div class="navigationBar">
+
     <nav class="menu">
-      <a href="">Dashboard</a>
-      <a href="">Ventas</a>
-      <a href="">Inventario</a>
-      <a href="">Finanzas</a>
-      <a href="">Clientes</a>
-      <a href="">Proveedores</a>
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Dashboard
+      </a>
+      <a routerLink="/ventas" routerLinkActive="active">Ventas</a>
+      <a routerLink="/inventario" routerLinkActive="active">Inventario</a>
+      <a routerLink="/finanzas" routerLinkActive="active">Finanzas</a>
+      <a routerLink="/clientes" routerLinkActive="active">Clientes</a>
+      <a routerLink="/proveedores" routerLinkActive="active">Proveedores</a>
     </nav>
+
     <nav class="ownerModules">
       <span>Modulos de </span>
       <a href="">+ Crear modulo</a>
     </nav>
+
     <nav class="systemModules">
       <a href="">Centro de Inteligencia</a>
       <a href="">Plan de Acción</a>
     </nav>
+
   </div>
 </aside>

@@ -1,0 +1,606 @@
+.clientes-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 22px 24px 30px;
+    background: #f4f6f4;
+    color: #202523;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.page-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    .fecha {
+        display: block;
+        font-size: 10px;
+        color: #7d8581;
+        margin-bottom: 3px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 25px;
+        font-weight: 700;
+        color: #202523;
+    }
+
+    p {
+        margin: 4px 0 0;
+        font-size: 11px;
+        color: #737b77;
+    }
+}
+
+
+.btn-nuevo {
+    border: none;
+    background: #119b80;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: .2s;
+
+    i {
+        font-size: 13px;
+    }
+
+    &:hover {
+        background: #0d806a;
+        transform: translateY(-1px);
+    }
+}
+
+.resumen {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.card-resumen {
+    background: white;
+    border: 1px solid #e4e7e5;
+    border-radius: 9px;
+    min-height: 82px;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    position: relative;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, .025);
+
+    .card-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    span {
+        font-size: 9px;
+        color: #6e7672;
+        margin-bottom: 5px;
+    }
+
+    strong {
+        font-size: 19px;
+        color: #222725;
+        margin-bottom: 4px;
+    }
+
+    small {
+        font-size: 8px;
+        color: #8a918d;
+    }
+}
+
+.card-resumen.ticket {
+
+    .variacion {
+        position: absolute;
+        right: 12px;
+        top: 12px;
+        background: #fff0ed;
+        color: #df5e4e;
+        border-radius: 8px;
+        padding: 3px 6px;
+        font-size: 8px;
+        font-weight: 600;
+    }
+}
+
+.contenido-principal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 175px;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.tabla-container {
+    background: white;
+    border: 1px solid #e3e6e4;
+    border-radius: 9px;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.tabla-toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.buscador {
+    height: 30px;
+    min-width: 250px;
+    border: 1px solid #dfe3e1;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 9px;
+    gap: 7px;
+
+    i {
+        color: #89908d;
+        font-size: 11px;
+    }
+
+    input {
+        border: none;
+        outline: none;
+        width: 100%;
+        font-size: 12px;
+        color: #333;
+
+        &::placeholder {
+            color: #9da3a0;
+        }
+    }
+}
+
+.tabla-toolbar select {
+    height: 30px;
+    border: 1px solid #dfe3e1;
+    border-radius: 6px;
+    padding: 0 7px;
+    background: white;
+    color: #4d5551;
+    font-size: 9px;
+    outline: none;
+    cursor: pointer;
+}
+
+
+.tabla-scroll {
+    overflow-x: auto;
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+
+    thead {
+        background: #fcfcfc;
+
+        th {
+            text-align: left;
+            padding: 8px 11px;
+            font-size: 8px;
+            text-transform: uppercase;
+            color: #8b928f;
+            font-weight: 600;
+            border-bottom: 1px solid #e8ebe9;
+            white-space: nowrap;
+        }
+    }
+
+    tbody {
+
+        tr {
+            border-bottom: 1px solid #eceeec;
+            transition: background .15s;
+
+            &:hover {
+                background: #f8fbfa;
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        td {
+            padding: 8px 11px;
+            font-size: 9px;
+            color: #4d5551;
+            white-space: nowrap;
+        }
+    }
+}
+
+.cliente-nombre {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    div:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    strong {
+        font-size: 12px;
+        color: #303633;
+    }
+}
+
+.avatar {
+    width: 23px;
+    height: 23px;
+    border-radius: 6px;
+    background: #e8f5f1;
+    color: #168c76;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 7px;
+    font-weight: 700;
+}
+
+
+.estado {
+    width: fit-content;
+    padding: 2px 5px;
+    border-radius: 5px;
+    font-size: 7px;
+    font-weight: 600;
+
+    &.frecuente {
+        color: #168b70;
+        background: #e7f6f0;
+    }
+
+    &.activo {
+        color: #6c726f;
+        background: #eef0ef;
+    }
+
+    &.inactivo {
+        color: #e05d4e;
+        background: #fff0ed;
+    }
+}
+
+
+.compras {
+    font-weight: 600;
+    color: #343a37 !important;
+}
+
+.acciones {
+    display: flex;
+    gap: 4px;
+
+    button {
+        width: 22px;
+        height: 22px;
+        border: 1px solid #e2e5e3;
+        background: white;
+        color: #777f7b;
+        border-radius: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        i {
+            font-size: 9px;
+        }
+
+        &:hover {
+            background: #edf7f4;
+            color: #138c74;
+            border-color: #cce8e0;
+        }
+    }
+}
+
+
+.sin-resultados {
+    height: 100px;
+    text-align: center !important;
+    color: #919894 !important;
+
+    i {
+        display: block;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+}
+
+
+.tabla-footer {
+    padding: 8px 12px;
+    border-top: 1px solid #eceeec;
+    color: #8b928e;
+    font-size: 8px;
+}
+
+.actividad {
+    background: white;
+    border: 1px solid #e3e6e4;
+    border-radius: 9px;
+    padding: 12px;
+    min-width: 0;
+}
+
+.aside-title {
+    border-bottom: 1px solid #e8ebe9;
+    padding-bottom: 8px;
+    margin-bottom: 3px;
+
+    h3 {
+        margin: 0 0 7px;
+        font-size: 11px;
+        color: #343a37;
+    }
+
+    span {
+        font-size: 7px;
+        color: #969c99;
+        font-weight: 600;
+    }
+}
+
+
+.actividad-item {
+    display: grid;
+    grid-template-columns: 20px 1fr auto;
+    gap: 6px;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #eef0ef;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.actividad-avatar {
+    width: 19px;
+    height: 19px;
+    border-radius: 5px;
+    background: #eaf5f2;
+    color: #148b75;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6px;
+    font-weight: 700;
+}
+
+.actividad-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    strong {
+        font-size: 8px;
+        color: #303532;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    span {
+        font-size: 7px;
+        color: #8b928e;
+        margin-top: 2px;
+    }
+}
+
+.actividad-item small {
+    font-size: 7px;
+    color: #7c837f;
+}
+
+
+.destacados {
+    border-top: 1px solid #e8ebe9;
+    margin-top: 6px;
+    padding-top: 9px;
+
+    h4 {
+        margin: 0 0 8px;
+        font-size: 7px;
+        color: #969c99;
+    }
+}
+
+.destacado {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 5px 0;
+    font-size: 7px;
+    border-bottom: 1px solid #f0f1f0;
+
+    span {
+        color: #343a37;
+    }
+
+    strong {
+        color: #158a73;
+    }
+}
+
+.btn-ver-todos {
+    width: 100%;
+    margin-top: 8px;
+    border: 1px solid #e0e4e2;
+    background: white;
+    border-radius: 6px;
+    padding: 6px;
+    font-size: 7px;
+    color: #666e6a;
+    cursor: pointer;
+
+    &:hover {
+        background: #f5f9f8;
+    }
+}
+
+.inferior {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+
+.panel {
+    background: white;
+    border: 1px solid #e3e6e4;
+    border-radius: 9px;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 11px 13px;
+    border-bottom: 1px solid #e8ebe9;
+
+    h3 {
+        margin: 0;
+        font-size: 10px;
+        color: #343a37;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+
+        i {
+            font-size: 10px;
+        }
+    }
+}
+
+.alerta {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 9px 13px;
+    border-bottom: 1px solid #eceeec;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    .punto {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+
+        &.rojo {
+            background: #e05a4d;
+        }
+
+        &.amarillo {
+            background: #e1a229;
+        }
+    }
+
+    strong {
+        display: block;
+        font-size: 15px;
+        color: #3c433f;
+        margin-bottom: 3px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 13px;
+        color: #727a76;
+    }
+
+    small {
+        display: block;
+        margin-top: 3px;
+        font-size: 11.5px;
+        color: #a0a6a3;
+    }
+}
+
+.recomendacion {
+    padding: 10px 13px;
+    border-bottom: 1px solid #eceeec;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.recomendacion-titulo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    strong {
+        font-size: 14px;
+        color: #3a413e;
+    }
+}
+
+.prioridad {
+    font-size: 12px;
+    padding: 3px 5px;
+    border-radius: 5px;
+    font-weight: 700;
+
+    &.alta {
+        color: #df5b4d;
+        background: #fff0ed;
+    }
+
+    &.oportunidad {
+        color: #168b72;
+        background: #e7f5f1;
+    }
+
+    &.media {
+        color: #c58a1b;
+        background: #fff6df;
+    }
+}
+
+.recomendacion p {
+    font-size: 11px;
+    line-height: 1.5;
+    color: #777f7b;
+    margin: 5px 0;
+}
+
+.recomendacion button {
+    border: none;
+    background: #edf7f4;
+    color: #168a73;
+    border-radius: 5px;
+    padding: 4px 7px;
+    font-size: 8.5px;
+    cursor: pointer;
+
+    &:hover {
+        background: #dcefe9;
+    }
+}

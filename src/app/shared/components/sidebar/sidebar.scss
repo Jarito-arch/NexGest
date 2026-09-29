@@ -76,3 +76,52 @@
   flex-direction: column;
   gap: 6px;
 }
+
+.sidebar-menu {
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 9px 11px;
+
+    color: #aeb7b3;
+    text-decoration: none;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    transition:
+      background .2s ease,
+      color .2s ease;
+
+    i {
+      font-size: 13px;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, .05);
+      color: #ffffff;
+    }
+
+    &.active {
+      background: linear-gradient(
+        90deg,
+        rgba(10, 139, 116, .42),
+        rgba(10, 139, 116, .22)
+      );
+
+      color: #ffffff;
+
+      box-shadow:
+        inset 3px 0 0 #10a98d;
+
+      i {
+        color: #5ce0c5;
+      }
+    }
+  }
+}

@@ -1,0 +1,296 @@
+<div class="clientes-page">
+    <div class="page-header">
+        <div>
+            <span class="fecha">Miércoles, 26 de agosto</span>
+            <h1>Clientes</h1>
+            <p>Gestiona y analiza los clientes de tu negocio</p>
+        </div>
+
+        <button class="btn-nuevo" (click)="nuevoCliente()">
+            <i class="bi bi-plus-lg"></i>
+            Nuevo cliente
+        </button>
+    </div>
+
+    <section class="resumen">
+
+        <div class="card-resumen">
+            <div class="card-info">
+                <span>Clientes totales</span>
+                <strong>{{ estadisticas.total }}</strong>
+                <small>Registros en el sistema</small>
+            </div>
+        </div>
+
+        <div class="card-resumen">
+            <div class="card-info">
+                <span>Clientes frecuentes</span>
+                <strong>{{ estadisticas.frecuentes }}</strong>
+                <small>3+ compras en los últimos 30 días</small>
+            </div>
+        </div>
+
+        <div class="card-resumen">
+            <div class="card-info">
+                <span>Clientes inactivos</span>
+                <strong>{{ estadisticas.inactivos }}</strong>
+                <small>Sin compras hace 3+ semanas</small>
+            </div>
+        </div>
+
+        <div class="card-resumen ticket">
+            <div class="card-info">
+                <span>Ticket promedio</span>
+                <strong>S/ {{ estadisticas.ticket | number:'1.2-2' }}</strong>
+                <small>Promedio por venta · últimos 30 días</small>
+            </div>
+
+            <span class="variacion">
+                <i class="bi bi-arrow-down-short"></i>
+                9.2%
+            </span>
+        </div>
+
+    </section>
+
+    <section class="contenido-principal">
+        <div class="tabla-container">
+            <div class="tabla-toolbar">
+
+                <div class="buscador">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Buscar por nombre, teléfono o email" [(ngModel)]="busqueda"
+                        (input)="filtrarClientes()">
+                </div>
+
+                <select [(ngModel)]="estadoSeleccionado" (change)="filtrarClientes()">
+                    <option value="Todos">Todos los estados</option>
+                    <option value="Frecuente">Frecuente</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                </select>
+
+                <select [(ngModel)]="periodoSeleccionado">
+                    <option value="30">Últimos 30 días</option>
+                    <option value="7">Últimos 7 días</option>
+                    <option value="90">Últimos 90 días</option>
+                </select>
+
+            </div>
+
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Compras</th>
+                            <th>Última compra</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let cliente of clientesFiltrados">
+                            <td>
+                                <div class="cliente-nombre">
+                                    <div class="avatar">
+                                        {{ obtenerIniciales(cliente.nombre) }}
+                                    </div>
+
+                                    <div>
+                                        <strong>{{ cliente.nombre }}</strong>
+
+                                        <span class="estado" [ngClass]="cliente.estado.toLowerCase()">
+                                            {{ cliente.estado }}
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>{{ cliente.telefono }}</td>
+                            <td>{{ cliente.email || '—' }}</td>
+                            <td class="compras">{{ cliente.compras }}</td>
+                            <td>{{ cliente.ultimaCompra }}</td>
+
+                            <td>
+                                <div class="acciones">
+
+                                    <button title="Ver cliente" (click)="verCliente(cliente)">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button title="Editar cliente" (click)="editarCliente(cliente)">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button title="Eliminar cliente" (click)="eliminarCliente(cliente)">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <tr *ngIf="clientesFiltrados.length === 0">
+                            <td colspan="6" class="sin-resultados">
+                                <i class="bi bi-search"></i>
+                                <span>No se encontraron clientes</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tabla-footer">
+                Mostrando {{ clientesFiltrados.length }} de {{ clientes.length }} clientes
+                · Compras en los últimos 30 días
+            </div>
+
+        </div>
+
+        <aside class="actividad">
+            <div class="aside-title">
+                <h3>Actividad reciente</h3>
+                <span>ACTIVIDAD RECIENTE</span>
+            </div>
+
+            <div class="actividad-lista">
+                <div class="actividad-item" *ngFor="let actividad of actividades">
+
+                    <div class="actividad-avatar">{{ obtenerIniciales(actividad.nombre) }}</div>
+                    <div class="actividad-info">
+                        <strong>{{ actividad.nombre }}</strong>
+                        <span>{{ actividad.descripcion }}</span>
+                    </div>
+                    <small>{{ actividad.fecha }}</small>
+
+                </div>
+            </div>
+
+            <div class="destacados">
+                <h4>CLIENTES DESTACADOS</h4>
+                <div class="destacado" *ngFor="let cliente of clientesDestacados">
+                    <span>{{ cliente.nombre }}</span>
+                    <strong>{{ cliente.compras }} compras</strong>
+                </div>
+                <button class="btn-ver-todos">Ver todos →</button>
+
+            </div>
+        </aside>
+    </section>
+
+
+    <section class="inferior">
+        <div class="panel">
+            <div class="panel-header">
+                <h3>
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Alertas de clientes
+                </h3>
+            </div>
+
+            <div class="alerta">
+                <span class="punto rojo"></span>
+                <div>
+                    <strong>4 clientes sin compras hace 3+ semanas</strong>
+                    <p>Marta Gálvez, Renzo Torres, Lucía Chávez y 1 más.</p>
+                    <small>Última compra hace 21 días o más</small>
+                </div>
+            </div>
+
+            <div class="alerta">
+                <span class="punto amarillo"></span>
+                <div>
+                    <strong>2 clientes frecuentes compran menos</strong>
+                    <p> Jorge Ruiz (6 → 3 compras), Marta Gálvez (5 → 1 compras).</p>
+                    <small>Últimos 30 días frente a los 30 días anteriores</small>
+                </div>
+            </div>
+
+            <div class="alerta">
+                <span class="punto amarillo"></span>
+                <div>
+                    <strong>2 clientes sin compras registradas</strong>
+                    <p>Andrés Castillo, Paola Díaz.</p>
+                    <small>No tienen ventas asociadas</small>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel recomendaciones">
+            <div class="panel-header">
+                <h3>
+                    <i class="bi bi-lightbulb"></i>
+                    Recomendaciones
+                </h3>
+            </div>
+
+
+            <div class="recomendacion">
+                <div class="recomendacion-texto">
+                    <div class="recomendacion-titulo">
+                        <strong>Revisar clientes inactivos</strong>
+                        <span class="prioridad alta">ALTA</span>
+                    </div>
+
+                    <p>
+                        4 clientes no compran hace 3 semanas o más.
+                        Revisa su historial para ver cuánto compraban antes.
+                    </p>
+
+                    <button>
+                        Ver clientes inactivos →
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="recomendacion">
+
+                <div class="recomendacion-texto">
+                    <div class="recomendacion-titulo">
+                        <strong>Identificar clientes con mayor frecuencia de compra</strong>
+                        <span class="prioridad oportunidad">OPORTUNIDAD</span>
+                    </div>
+
+                    <p>
+                        En los últimos 30 días compran más:
+                        María Alvarado, Carlos Mendoza y Jorge Ruiz.
+                    </p>
+
+                    <button>
+                        Ver clientes frecuentes →
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="recomendacion">
+
+                <div class="recomendacion-texto">
+                    <div class="recomendacion-titulo">
+                        <strong>Analizar cambios en la frecuencia de compra</strong>
+                        <span class="prioridad media">MEDIA</span>
+                    </div>
+
+                    <p>
+                        Jorge Ruiz pasó de 6 a 3 compras entre los dos últimos
+                        periodos de 30 días.
+                    </p>
+
+                    <button>
+                        Ver historial →
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
