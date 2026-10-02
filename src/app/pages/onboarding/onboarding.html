@@ -1,0 +1,30 @@
+<app-onboarding-layout>
+  <!-- Indicador de pasos -->
+  <app-step-indicator [currentStep]="1"> </app-step-indicator>
+
+  <!-- Tarjeta principal -->
+  <app-onboarding-card>
+    <h1>Cuéntanos sobre tu negocio</h1>
+
+    <p class="subtitle">Primero conozcamos lo básico para adaptar NexGest a tu realidad.</p>
+
+    <label> Nombre del negocio * </label>
+
+    <input type="text" placeholder="Nombre de tu negocio" />
+
+    <h3>¿A qué se dedica principalmente?</h3>
+
+    <div class="options">
+      <app-option-card *ngFor="let item of businessTypes" [icon]="item.icon" [title]="item.title">
+      </app-option-card>
+    </div>
+
+    <h3>¿Cuántas personas trabajan actualmente en el negocio?</h3>
+
+    <div class="options small">
+      <app-option-card *ngFor="let item of teamSizes" [icon]="item.icon" [title]="item.title">
+      </app-option-card>
+    </div>
+    <button class="continue-btn">Continuar →</button>
+  </app-onboarding-card>
+</app-onboarding-layout>

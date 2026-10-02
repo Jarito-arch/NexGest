@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Landing } from './pages/landing/landing';
 import {Signup} from './pages/signup/signup';
+import { Onboarding } from './pages/onboarding/onboarding';
 
 export const routes: Routes = [
 
@@ -18,6 +19,10 @@ export const routes: Routes = [
   {
     path:'signup',
     component:Signup
-  }
+  },
+  {
+ path:'onboarding',
+ component:Onboarding
+}
 
 ];
