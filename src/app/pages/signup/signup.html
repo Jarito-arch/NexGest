@@ -1,0 +1,48 @@
+<app-auth-layout
+  title="Queremos conocerte"
+  highlight="creemos algo juntos."
+  description="Cuéntanos sobre tu negocio y prepararemos NexGest para ti."
+>
+  <app-auth-card>
+    <div class="signup-content">
+      <div class="badge">✦ Crea tu espacio NexGest</div>
+
+      <h1>Comencemos juntos</h1>
+
+      <p>Completa tus datos para crear tu cuenta.</p>
+
+      <app-form-field label="Nombre completo" placeholder="¿Cómo te llamas?" type="text">
+      </app-form-field>
+
+      <div class="email-confirm">
+        <label> Este es tu correo </label>
+
+        <div class="email-box">
+          <span> usuario@empresa.com </span>
+
+          <button type="button">✎</button>
+        </div>
+      </div>
+
+      <div class="password-group">
+        <app-form-field label="Contraseña" placeholder="Crea una contraseña segura" type="password">
+        </app-form-field>
+
+        <app-form-field
+          label="Confirmar contraseña"
+          placeholder="Repite tu contraseña"
+          type="password"
+        >
+        </app-form-field>
+      </div>
+
+      <app-primary-button> Crear mi cuenta → </app-primary-button>
+
+      <div class="login-link">
+        ¿Ya tienes una cuenta?
+
+        <span> Iniciar sesión </span>
+      </div>
+    </div>
+  </app-auth-card>
+</app-auth-layout>
