@@ -1,1 +1,342 @@
-<p>ESTAS EN DASHBOARD.HTML</p>
+<div class="dashboard">
+
+    <section class="health-card">
+
+        <div class="health-left">
+
+            <div class="health-ring">
+
+                <svg viewBox="0 0 128 128">
+
+                    <circle cx="64" cy="64" r="52" class="ring-bg" />
+
+                    <circle cx="64" cy="64" r="52" class="ring-success" stroke-dasharray="65.3 261.4"
+                        stroke-dashoffset="0" />
+
+                    <circle cx="64" cy="64" r="52" class="ring-success" stroke-dasharray="70.4 261.4"
+                        stroke-dashoffset="-68.3" />
+
+                    <circle cx="64" cy="64" r="52" class="ring-warning" stroke-dasharray="51.2 261.4"
+                        stroke-dashoffset="-141.7" />
+
+                    <circle cx="64" cy="64" r="52" class="ring-success" stroke-dasharray="67 261.4"
+                        stroke-dashoffset="-195.9" />
+
+                    <circle cx="64" cy="64" r="52" class="ring-success" stroke-dasharray="63.6 261.4"
+                        stroke-dashoffset="-265.9" />
+
+                    <text x="64" y="60" text-anchor="middle" class="ring-number">
+                        74
+                    </text>
+
+                    <text x="64" y="78" text-anchor="middle" class="ring-label">
+                        de 100
+                    </text>
+
+                </svg>
+
+            </div>
+
+
+            <div class="health-info">
+
+                <span class="eyebrow">
+                    SALUD DEL NEGOCIO
+                </span>
+
+                <h2>Estable</h2>
+
+                <p>
+                    Mejoró 3 puntos respecto al mes pasado
+                </p>
+
+                <span class="health-tag">
+                    ● En rango saludable
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="health-right">
+
+            @for (area of areas; track area.nombre) {
+
+            <div class="health-row">
+
+                <span class="health-label">
+                    {{ area.nombre }}
+                </span>
+
+                <div class="health-track">
+
+                    <div class="health-fill" [class.warning]="area.estado === 'warning'" [style.width.%]="area.valor">
+                    </div>
+
+                </div>
+
+                <span class="health-value">
+                    {{ area.valor }}
+                </span>
+
+            </div>
+
+            }
+
+        </div>
+
+    </section>
+
+
+    <section class="kpi-grid">
+
+        @for (kpi of kpis; track kpi.titulo; let i = $index) {
+
+        <article class="kpi-card">
+
+            <div class="kpi-top">
+
+                <span class="kpi-title">
+                    {{ kpi.titulo }}
+                </span>
+
+                <span class="kpi-trend" [class.up]="kpi.tipo === 'up'" [class.down]="kpi.tipo === 'down'">
+                    {{ kpi.tendencia }}
+                </span>
+
+            </div>
+
+            <div class="kpi-value">
+                {{ kpi.valor }}
+            </div>
+
+            <p class="kpi-description">
+                {{ kpi.descripcion }}
+            </p>
+
+            <svg class="sparkline" viewBox="0 0 200 30" preserveAspectRatio="none">
+
+                @if (i === 0) {
+                <polyline points="0,24 30,20 60,22 90,14 120,16 150,8 180,10 200,4" />
+                }
+
+                @if (i === 1) {
+                <polyline points="0,18 30,20 60,15 90,17 120,12 150,14 180,9 200,10" />
+                }
+
+                @if (i === 2) {
+                <polyline class="danger-line" points="0,20 30,18 60,16 90,15 120,12 150,10 180,7 200,5" />
+                }
+
+                @if (i === 3) {
+                <polyline points="0,16 30,17 60,14 90,16 120,13 150,11 180,12 200,8" />
+                }
+
+            </svg>
+
+        </article>
+
+        }
+
+    </section>
+
+
+    <section class="two-columns">
+
+        <article class="panel">
+
+            <div class="panel-title">
+
+                <div class="title-icon danger">
+                    !
+                </div>
+
+                <span>Alertas</span>
+
+            </div>
+
+
+            <div class="alert-list">
+
+                @for (alerta of alertas; track alerta.titulo) {
+
+                <div class="alert-item">
+
+                    <span class="alert-dot" [class.risk]="alerta.tipo === 'risk'"
+                        [class.warn]="alerta.tipo === 'warn'"></span>
+
+                    <div>
+
+                        <p class="alert-text">
+                            <strong>{{ alerta.titulo }}</strong>
+                            {{ alerta.texto }}
+                        </p>
+
+                        <span class="alert-meta">
+                            {{ alerta.meta }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+                }
+
+            </div>
+
+        </article>
+
+        <article class="panel">
+
+            <div class="panel-title">
+
+                <div class="title-icon bulb">
+                    ✦
+                </div>
+
+                <span>Recomendaciones</span>
+
+            </div>
+
+
+            @for (
+            recomendacion of recomendaciones;
+            track recomendacion.titulo
+            ) {
+
+            <div class="recommendation">
+
+                <div class="recommendation-top">
+
+                    <h3>
+                        {{ recomendacion.titulo }}
+                    </h3>
+
+                    <span class="priority" [class.high]="recomendacion.tipo === 'high'"
+                        [class.medium]="recomendacion.tipo === 'med'">
+                        {{ recomendacion.prioridad }}
+                    </span>
+
+                </div>
+
+                <p>
+                    {{ recomendacion.descripcion }}
+                </p>
+
+                <button class="recommendation-action">
+                    {{ recomendacion.accion }}
+                    <span>→</span>
+                </button>
+
+            </div>
+
+            }
+
+        </article>
+
+    </section>
+
+    <div class="section-heading">
+
+        <h2>
+            <span></span>
+            Plan de acción
+        </h2>
+
+        <button>
+            Ver plan completo →
+        </button>
+
+    </div>
+
+
+    <section class="action-plan">
+
+        @for (
+        item of planAccion;
+        track item.texto;
+        let i = $index
+        ) {
+
+        <div class="plan-row" [class.completed]="item.tipo === 'completed'">
+
+            <button class="plan-check" (click)="marcarPlan(i)" aria-label="Completar tarea">
+                @if (item.tipo === 'completed') {
+                ✓
+                }
+            </button>
+
+
+            <span class="plan-badge" [class.high]="item.tipo === 'high'" [class.medium]="item.tipo === 'med'"
+                [class.opportunity]="item.tipo === 'opp'">
+                {{ item.prioridad }}
+            </span>
+
+
+            <span class="plan-text">
+                {{ item.texto }}
+            </span>
+
+
+            <span class="plan-arrow">
+                →
+            </span>
+
+        </div>
+
+        }
+
+    </section>
+
+    <section class="trend-card">
+
+        <div class="trend-header">
+
+            <div>
+
+                <h2>
+                    Tendencia de ventas
+                </h2>
+
+                <p>
+                    Últimas 8 semanas, en soles
+                </p>
+
+            </div>
+
+
+            <div class="legend">
+
+                <span>
+                    <i class="current"></i>
+                    Este año
+                </span>
+
+                <span>
+                    <i class="previous"></i>
+                    Año anterior
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="trend-chart">
+
+            <svg viewBox="0 0 1120 140" preserveAspectRatio="none">
+
+                <polyline class="previous-line"
+                    points="0,90 140,95 280,80 420,85 560,60 700,68 840,40 980,45 1120,20" />
+
+                <polyline class="current-line"
+                    points="0,100 140,92 280,98 420,70 560,75 700,50 840,55 980,30 1120,35" />
+
+            </svg>
+
+        </div>
+
+    </section>
+
+</div>

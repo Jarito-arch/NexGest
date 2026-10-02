@@ -1,0 +1,338 @@
+<main class="page">
+
+    <section class="page-header">
+
+        <div>
+            <h1>Inventario</h1>
+
+            <p>
+                Controla tus productos, existencias y movimientos
+            </p>
+        </div>
+
+        <div class="header-actions">
+            <button class="btn-secondary">
+                <i class="bi bi-box-arrow-in-down"></i>
+                Registrar entrada
+            </button>
+
+            <button class="btn-primary">
+                <i class="bi bi-plus-lg"></i>
+                Nuevo producto
+            </button>
+        </div>
+
+    </section>
+
+
+    <section class="stats-grid">
+
+        <article class="stat-card">
+            <div>
+                <span>Productos</span>
+                <strong>128</strong>
+                <small>Registrados en inventario</small>
+            </div>
+
+            <div class="stat-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <div>
+                <span>Stock disponible</span>
+                <strong>1,842</strong>
+                <small>Unidades disponibles</small>
+            </div>
+
+            <div class="stat-icon">
+                <i class="bi bi-stack"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <div>
+                <span>Stock bajo</span>
+                <strong class="warning-number">12</strong>
+                <small>Requieren reposición</small>
+            </div>
+
+            <div class="stat-icon warning">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <div>
+                <span>Valor del inventario</span>
+                <strong>S/ 48,920</strong>
+                <small>Valor estimado actual</small>
+            </div>
+
+            <div class="stat-icon">
+                <i class="bi bi-cash-stack"></i>
+            </div>
+        </article>
+
+    </section>
+
+    <section class="toolbar">
+
+        <div class="search">
+            <i class="bi bi-search"></i>
+
+            <input type="text" placeholder="Buscar producto..." />
+        </div>
+
+        <select>
+            <option>Todas las categorías</option>
+            <option>Café</option>
+            <option>Lácteos</option>
+            <option>Insumos</option>
+            <option>Postres</option>
+        </select>
+
+        <select>
+            <option>Todos los estados</option>
+            <option>Disponible</option>
+            <option>Stock bajo</option>
+            <option>Agotado</option>
+        </select>
+
+    </section>
+
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <div>
+                <h2>Productos</h2>
+                <span>Listado de productos registrados</span>
+            </div>
+
+            <button class="text-button">
+                Ver movimientos
+                <i class="bi bi-arrow-right"></i>
+            </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>PRODUCTO</th>
+                        <th>CATEGORÍA</th>
+                        <th>STOCK</th>
+                        <th>PRECIO</th>
+                        <th>ESTADO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <span class="product-icon">
+                                    <i class="bi bi-cup-hot"></i>
+                                </span>
+
+                                <div>
+                                    <strong>Café americano</strong>
+                                    <small>SKU: CAF-001</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>Café</td>
+
+                        <td>
+                            <strong>85</strong> unidades
+                        </td>
+
+                        <td>S/ 8.50</td>
+
+                        <td>
+                            <span class="status available">
+                                Disponible
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+                                <button><i class="bi bi-eye"></i></button>
+                                <button><i class="bi bi-pencil"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <span class="product-icon">
+                                    <i class="bi bi-cup"></i>
+                                </span>
+
+                                <div>
+                                    <strong>Leche entera</strong>
+                                    <small>SKU: LEC-004</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>Lácteos</td>
+
+                        <td>
+                            <strong>18</strong> unidades
+                        </td>
+
+                        <td>S/ 5.80</td>
+
+                        <td>
+                            <span class="status low">
+                                Stock bajo
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+                                <button><i class="bi bi-eye"></i></button>
+                                <button><i class="bi bi-pencil"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <span class="product-icon">
+                                    <i class="bi bi-box"></i>
+                                </span>
+
+                                <div>
+                                    <strong>Vasos descartables</strong>
+                                    <small>SKU: VAS-010</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>Insumos</td>
+
+                        <td>
+                            <strong>320</strong> unidades
+                        </td>
+
+                        <td>S/ 0.35</td>
+
+                        <td>
+                            <span class="status available">
+                                Disponible
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+                                <button><i class="bi bi-eye"></i></button>
+                                <button><i class="bi bi-pencil"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <td>
+                            <div class="product">
+                                <span class="product-icon">
+                                    <i class="bi bi-cookie"></i>
+                                </span>
+
+                                <div>
+                                    <strong>Brownie</strong>
+                                    <small>SKU: BRO-021</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>Postres</td>
+
+                        <td>
+                            <strong>4</strong> unidades
+                        </td>
+
+                        <td>S/ 9.00</td>
+
+                        <td>
+                            <span class="status critical">
+                                Agotándose
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="actions">
+                                <button><i class="bi bi-eye"></i></button>
+                                <button><i class="bi bi-pencil"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+    <section class="alerts">
+
+        <div class="alert-card">
+
+            <div class="alert-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+
+            <div>
+                <strong>12 productos tienen stock bajo</strong>
+                <span>Revisa estos productos para evitar quiebres de stock.</span>
+            </div>
+
+            <button>
+                Revisar
+            </button>
+
+        </div>
+
+
+        <div class="alert-card">
+
+            <div class="alert-icon">
+                <i class="bi bi-arrow-repeat"></i>
+            </div>
+
+            <div>
+                <strong>8 movimientos registrados hoy</strong>
+                <span>Consulta las entradas y salidas recientes.</span>
+            </div>
+
+            <button>
+                Ver movimientos
+            </button>
+
+        </div>
+
+    </section>
+
+</main>

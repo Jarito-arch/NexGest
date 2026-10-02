@@ -1,0 +1,383 @@
+<main class="page">
+
+    <section class="page-header">
+
+        <div>
+            <h1>Ventas</h1>
+
+            <p>
+                Gestiona las ventas y pedidos de tu negocio
+            </p>
+        </div>
+
+        <button class="btn-primary">
+            <i class="bi bi-plus-lg"></i>
+            Nueva venta
+        </button>
+
+    </section>
+
+    <section class="stats-grid">
+
+        <article class="stat-card">
+            <span>Ventas del mes</span>
+            <strong>S/ 42,680</strong>
+            <small>+12% frente al mes anterior</small>
+
+            <div class="stat-icon">
+                <i class="bi bi-cash"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Pedidos</span>
+            <strong>186</strong>
+            <small>24 pedidos esta semana</small>
+
+            <div class="stat-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Ticket promedio</span>
+            <strong>S/ 229.46</strong>
+            <small>Por venta realizada</small>
+
+            <div class="stat-icon">
+                <i class="bi bi-graph-up"></i>
+            </div>
+        </article>
+
+
+        <article class="stat-card">
+            <span>Clientes atendidos</span>
+            <strong>94</strong>
+            <small>Clientes este mes</small>
+
+            <div class="stat-icon">
+                <i class="bi bi-people"></i>
+            </div>
+        </article>
+
+    </section>
+
+    <section class="toolbar">
+
+        <div class="search">
+            <i class="bi bi-search"></i>
+
+            <input type="text" placeholder="Buscar venta, cliente o comprobante..." />
+        </div>
+
+        <select>
+            <option>Todos los estados</option>
+            <option>Completada</option>
+            <option>Pendiente</option>
+            <option>Anulada</option>
+        </select>
+
+        <select>
+            <option>Este mes</option>
+            <option>Últimos 7 días</option>
+            <option>Últimos 30 días</option>
+        </select>
+
+    </section>
+
+    <section class="sales-grid">
+
+        <article class="panel sales-panel">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Ventas recientes</h2>
+                    <span>Últimas operaciones realizadas</span>
+                </div>
+
+                <button class="text-button">
+                    Ver todas
+                    <i class="bi bi-arrow-right"></i>
+                </button>
+
+            </div>
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>COMPROBANTE</th>
+                            <th>CLIENTE</th>
+                            <th>FECHA</th>
+                            <th>ESTADO</th>
+                            <th class="right">TOTAL</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>
+                                <strong>BV-001284</strong>
+                            </td>
+
+                            <td>
+                                Juan Pérez
+                            </td>
+
+                            <td>
+                                26 ago 2026
+                            </td>
+
+                            <td>
+                                <span class="status completed">
+                                    Completada
+                                </span>
+                            </td>
+
+                            <td class="right amount">
+                                S/ 185.00
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <strong>BV-001283</strong>
+                            </td>
+
+                            <td>
+                                María Torres
+                            </td>
+
+                            <td>
+                                26 ago 2026
+                            </td>
+
+                            <td>
+                                <span class="status completed">
+                                    Completada
+                                </span>
+                            </td>
+
+                            <td class="right amount">
+                                S/ 320.00
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <strong>BV-001282</strong>
+                            </td>
+
+                            <td>
+                                Café Aurora
+                            </td>
+
+                            <td>
+                                25 ago 2026
+                            </td>
+
+                            <td>
+                                <span class="status pending">
+                                    Pendiente
+                                </span>
+                            </td>
+
+                            <td class="right amount">
+                                S/ 540.00
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <strong>BV-001281</strong>
+                            </td>
+
+                            <td>
+                                Carlos Ramírez
+                            </td>
+
+                            <td>
+                                25 ago 2026
+                            </td>
+
+                            <td>
+                                <span class="status completed">
+                                    Completada
+                                </span>
+                            </td>
+
+                            <td class="right amount">
+                                S/ 95.00
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <strong>BV-001280</strong>
+                            </td>
+
+                            <td>
+                                Ana Sánchez
+                            </td>
+
+                            <td>
+                                24 ago 2026
+                            </td>
+
+                            <td>
+                                <span class="status cancelled">
+                                    Anulada
+                                </span>
+                            </td>
+
+                            <td class="right amount">
+                                S/ 210.00
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </article>
+
+        <aside class="panel summary">
+
+            <div class="panel-header">
+
+                <div>
+                    <h2>Resumen de ventas</h2>
+                    <span>Agosto 2026</span>
+                </div>
+
+            </div>
+
+
+            <div class="summary-total">
+
+                <span>Total vendido</span>
+
+                <strong>
+                    S/ 42,680
+                </strong>
+
+                <small>
+                    +12% respecto al mes anterior
+                </small>
+
+            </div>
+
+
+            <div class="summary-row">
+                <span>Completadas</span>
+                <strong>172</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Pendientes</span>
+                <strong>9</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Anuladas</span>
+                <strong>5</strong>
+            </div>
+
+
+            <div class="sales-progress">
+
+                <div class="progress-label">
+                    <span>Meta mensual</span>
+                    <strong>78%</strong>
+                </div>
+
+                <div class="progress">
+                    <span></span>
+                </div>
+
+                <small>
+                    S/ 42,680 de S/ 55,000
+                </small>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+
+    <section class="panel best-products">
+
+        <div class="panel-header">
+
+            <div>
+                <h2>Productos más vendidos</h2>
+                <span>Rendimiento durante este mes</span>
+            </div>
+
+        </div>
+
+
+        <div class="products">
+
+            <div class="product-row">
+
+                <span class="rank">01</span>
+
+                <div class="product-info">
+                    <strong>Café americano</strong>
+                    <span>248 unidades vendidas</span>
+                </div>
+
+                <strong>S/ 2,108</strong>
+
+            </div>
+
+
+            <div class="product-row">
+
+                <span class="rank">02</span>
+
+                <div class="product-info">
+                    <strong>Capuccino</strong>
+                    <span>186 unidades vendidas</span>
+                </div>
+
+                <strong>S/ 1,860</strong>
+
+            </div>
+
+
+            <div class="product-row">
+
+                <span class="rank">03</span>
+
+                <div class="product-info">
+                    <strong>Brownie</strong>
+                    <span>142 unidades vendidas</span>
+                </div>
+
+                <strong>S/ 1,278</strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
