@@ -3,11 +3,29 @@
     <div class="logo">
       <span> N </span>
 
-      <strong> NEXGEST </strong>
+      <strong> NexGest </strong>
     </div>
+
+    <a class="back-home"> ← Volver al inicio </a>
   </header>
 
-  <main class="auth-content">
-    <ng-content></ng-content>
+  <main class="auth-body">
+    <section class="auth-message">
+      <div class="message-glow"></div>
+
+      <h1>
+        El futuro de tu negocio
+
+        <br />
+
+        <span> empieza aquí. </span>
+      </h1>
+
+      <p>Gestiona, automatiza y toma mejores decisiones con NexGest.</p>
+    </section>
+
+    <section class="auth-content">
+      <ng-content></ng-content>
+    </section>
   </main>
 </div>

@@ -1,9 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
+  selector: 'app-auth-card',
+  standalone: true,
   imports: [],
-  selector: 'app-auth-card-component',
-  styleUrl: './auth-card-component.scss',
   templateUrl: './auth-card-component.html',
+  styleUrl: './auth-card-component.scss'
 })
-export class AuthCardComponent {}
+export class AuthCardComponent {
+
+}
