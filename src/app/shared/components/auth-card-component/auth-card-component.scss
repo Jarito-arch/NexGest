@@ -1,0 +1,42 @@
+.auth-card{
+
+  width:100%;
+
+  max-width:430px;
+
+  background:#ffffff;
+
+  border-radius:20px;
+
+  padding:35px;
+
+  box-shadow:
+  0 25px 60px rgba(0,0,0,.25);
+
+  color:#1b1f23;
+
+  animation:fadeCard .5s ease;
+
+}
+
+
+@keyframes fadeCard{
+
+from{
+
+opacity:0;
+
+transform:translateY(15px);
+
+}
+
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
