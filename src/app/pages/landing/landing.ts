@@ -1,12 +1,52 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { NgIcon } from '@ng-icons/core';
+import {
+  lucideLogIn,
+  lucideShieldCheck,
+  lucideZap,
+  lucideLayoutGrid,
+  lucideBrain,
+  lucideSmartphone,
+  lucideLock,
+} from '@ng-icons/lucide';
+import { AuthService } from '../../core/auth.service';
 
 @Component({
   selector: 'app-landing',
-  imports: [],
+  imports: [RouterLink, NgIcon],
   templateUrl: './landing.html',
   styleUrl: './landing.scss'
 })
-export class Landing implements OnInit {
+export class Landing implements OnInit, OnDestroy {
+
+  private router = inject(Router);
+  auth = inject(AuthService);
+
+  private destroyed = false;
+
+  icons = {
+    login: lucideLogIn,
+    shield: lucideShieldCheck,
+    zap: lucideZap,
+    grid: lucideLayoutGrid,
+    brain: lucideBrain,
+    phone: lucideSmartphone,
+    lock: lucideLock,
+  };
+
+  onEmail(event: Event) {
+    this.auth.draftEmail.set((event.target as HTMLInputElement).value);
+  }
+
+  start() {
+    this.router.navigate(['/signup']);
+  }
+
+  ngOnDestroy() {
+    this.destroyed = true;
+  }
+
 
 
   lineOne = '';
@@ -42,7 +82,7 @@ export class Landing implements OnInit {
   async startTyping(){
 
 
-    while(true){
+    while(!this.destroyed){
 
 
       await this.writeLine(
@@ -112,6 +152,7 @@ export class Landing implements OnInit {
 
       const interval = setInterval(()=>{
 
+        if(this.destroyed){ clearInterval(interval); resolve(); return; }
 
         const character = text[index];
 
@@ -228,6 +269,7 @@ export class Landing implements OnInit {
 
       const interval = setInterval(()=>{
 
+        if(this.destroyed){ clearInterval(interval); resolve(); return; }
 
         current = current.slice(0,-1);
 

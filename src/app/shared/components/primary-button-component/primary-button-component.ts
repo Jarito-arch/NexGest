@@ -5,13 +5,10 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [],
   templateUrl: './primary-button-component.html',
-  styleUrl: './primary-button-component.scss'
+  styleUrl: './primary-button-component.scss',
 })
 export class PrimaryButtonComponent {
-
-
-  @Input()
-  text:string = 'Continuar';
-
-
+  @Input() text: string = 'Continuar';
+  @Input() type: 'button' | 'submit' = 'submit';
+  @Input() disabled: boolean = false;
 }

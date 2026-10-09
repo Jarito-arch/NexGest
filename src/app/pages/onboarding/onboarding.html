@@ -1,8 +1,6 @@
 <app-onboarding-layout>
-  <!-- Indicador de pasos -->
   <app-step-indicator [currentStep]="1"> </app-step-indicator>
 
-  <!-- Tarjeta principal -->
   <app-onboarding-card>
     <h1>Cuéntanos sobre tu negocio</h1>
 
@@ -10,21 +8,42 @@
 
     <label> Nombre del negocio * </label>
 
-    <input type="text" placeholder="Nombre de tu negocio" />
+    <input
+      type="text"
+      placeholder="Nombre de tu negocio"
+      [value]="state.businessName()"
+      (input)="onName($event)"
+    />
 
     <h3>¿A qué se dedica principalmente?</h3>
 
     <div class="options">
-      <app-option-card *ngFor="let item of businessTypes" [icon]="item.icon" [title]="item.title">
-      </app-option-card>
+      @for (item of businessTypes; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.category() === item.title"
+          (click)="state.category.set(item.title)"
+        >
+        </app-option-card>
+      }
     </div>
 
     <h3>¿Cuántas personas trabajan actualmente en el negocio?</h3>
 
     <div class="options small">
-      <app-option-card *ngFor="let item of teamSizes" [icon]="item.icon" [title]="item.title">
-      </app-option-card>
+      @for (item of teamSizes; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.teamSize() === item.title"
+          (click)="state.teamSize.set(item.title)"
+        >
+        </app-option-card>
+      }
     </div>
-    <button class="continue-btn">Continuar →</button>
+
+    <button class="continue-btn" [disabled]="!valid()" (click)="next()">Continuar →</button>
+    <div class="clear"></div>
   </app-onboarding-card>
 </app-onboarding-layout>

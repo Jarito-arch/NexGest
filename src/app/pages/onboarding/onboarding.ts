@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { OnboardingService } from '../../core/onboarding.service';
 
 
 import { OnboardingLayoutComponent } 
@@ -49,8 +50,6 @@ import {
 
   imports:[
 
-    CommonModule,
-
     OnboardingLayoutComponent,
 
     StepIndicatorComponent,
@@ -70,6 +69,21 @@ import {
 
 
 export class Onboarding {
+
+state = inject(OnboardingService);
+private router = inject(Router);
+
+valid = computed(
+  () => !!this.state.businessName().trim() && !!this.state.category() && !!this.state.teamSize()
+);
+
+onName(event: Event) {
+  this.state.businessName.set((event.target as HTMLInputElement).value);
+}
+
+next() {
+  if (this.valid()) this.router.navigate(['/onboarding/step2']);
+}
 
 
 

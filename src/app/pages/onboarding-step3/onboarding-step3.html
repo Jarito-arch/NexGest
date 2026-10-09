@@ -1,0 +1,32 @@
+<app-onboarding-layout>
+  <app-step-indicator [currentStep]="3"> </app-step-indicator>
+
+  <div class="page-header">
+    <h1>Elige tus módulos</h1>
+    <p>Activa solo lo que necesitas. Podrás cambiarlo cuando quieras.</p>
+  </div>
+
+  <app-onboarding-card>
+    <h2>Módulos de NexGest</h2>
+
+    <div class="grid-3">
+      @for (item of modules; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.modules().includes(item.title)"
+          (click)="state.toggle(state.modules, item.title)"
+        >
+        </app-option-card>
+      }
+    </div>
+  </app-onboarding-card>
+
+  <div class="actions">
+    <button class="back-btn" type="button" (click)="back()">← Atrás</button>
+
+    <app-primary-button type="button" [disabled]="!valid()" (click)="next()">
+      Continuar →
+    </app-primary-button>
+  </div>
+</app-onboarding-layout>

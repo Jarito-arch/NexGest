@@ -1,0 +1,57 @@
+<app-onboarding-layout>
+  <!-- Indicador de progreso -->
+
+  <app-step-indicator [currentStep]="2"> </app-step-indicator>
+
+  <!-- Título principal -->
+
+  <div class="page-header">
+    <h1>¿Cómo funciona tu negocio?</h1>
+
+    <p>Selecciona las actividades que forman parte de tu operación.</p>
+  </div>
+
+  <!-- Actividades -->
+
+  <app-onboarding-card>
+    <h2>Actividades del negocio</h2>
+
+    <div class="checkbox-grid">
+      @for (item of activities; track item) {
+        <app-checkbox-option
+          [title]="item"
+          [selected]="state.activities().includes(item)"
+          (click)="state.toggle(state.activities, item)"
+        >
+        </app-checkbox-option>
+      }
+    </div>
+  </app-onboarding-card>
+
+  <!-- Frecuencia -->
+
+  <app-onboarding-card>
+    <h2>¿Con qué frecuencia registras tus movimientos?</h2>
+
+    <div class="frequency-grid">
+      @for (item of frequencies; track item) {
+        <app-checkbox-option
+          [title]="item"
+          [selected]="state.frequency() === item"
+          (click)="state.frequency.set(item)"
+        >
+        </app-checkbox-option>
+      }
+    </div>
+  </app-onboarding-card>
+
+  <!-- Botones -->
+
+  <div class="actions">
+    <button class="back-btn" type="button" (click)="back()">← Atrás</button>
+
+    <app-primary-button type="button" [disabled]="!valid()" (click)="next()">
+      Continuar →
+    </app-primary-button>
+  </div>
+</app-onboarding-layout>

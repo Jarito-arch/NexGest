@@ -1,24 +1,14 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LandingPage</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="landing-container">
+<div class="landing-container">
       <header class="navbar">
         <div class="logo">
           <span>N</span>
           <strong>NexGest</strong>
         </div>
+
+        <a class="login-btn" routerLink="/login">
+          <ng-icon [svg]="icons.login"></ng-icon>
+          Login
+        </a>
       </header>
 
       <main class="hero">
@@ -65,17 +55,23 @@
           </p>
 
           <div class="form">
-            <input type="email" placeholder="Tu correo electrónico" />
+            <input
+              type="email"
+              placeholder="Tu correo electrónico"
+              [value]="auth.draftEmail()"
+              (input)="onEmail($event)"
+              (keydown.enter)="start()"
+            />
 
-            <button>Quiero empezar</button>
+            <button type="button" (click)="start()">Quiero empezar</button>
           </div>
 
           <div class="advantages">
-            <span> ◯ Seguro y confiable </span>
+            <span><ng-icon [svg]="icons.shield"></ng-icon> Seguro y confiable </span>
 
-            <span> ⚡ Acceso inmediato </span>
+            <span><ng-icon [svg]="icons.zap"></ng-icon> Acceso inmediato </span>
 
-            <span> ▦ Sin complicaciones </span>
+            <span><ng-icon [svg]="icons.grid"></ng-icon> Sin complicaciones </span>
           </div>
         </section>
 
@@ -108,7 +104,7 @@
 
       <section class="benefits">
         <div class="benefit-card">
-          <div class="icon">▦</div>
+          <div class="icon"><ng-icon [svg]="icons.grid"></ng-icon></div>
 
           <h3>Modular y flexible</h3>
 
@@ -116,7 +112,7 @@
         </div>
 
         <div class="benefit-card">
-          <div class="icon">◷</div>
+          <div class="icon"><ng-icon [svg]="icons.brain"></ng-icon></div>
 
           <h3>Decisiones inteligentes</h3>
 
@@ -124,7 +120,7 @@
         </div>
 
         <div class="benefit-card">
-          <div class="icon">▣</div>
+          <div class="icon"><ng-icon [svg]="icons.phone"></ng-icon></div>
 
           <h3>Desde cualquier lugar</h3>
 
@@ -132,7 +128,7 @@
         </div>
 
         <div class="benefit-card">
-          <div class="icon">♢</div>
+          <div class="icon"><ng-icon [svg]="icons.lock"></ng-icon></div>
 
           <h3>Siempre contigo</h3>
 
@@ -140,5 +136,3 @@
         </div>
       </section>
     </div>
-  </body>
-</html>

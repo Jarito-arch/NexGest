@@ -1,28 +1,26 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-form-field',
   standalone: true,
   imports: [],
   templateUrl: './form-field-component.html',
-  styleUrl: './form-field-component.scss'
+  styleUrl: './form-field-component.scss',
 })
 export class FormFieldComponent {
+  @Input() label: string = '';
+  @Input() placeholder: string = '';
+  @Input() type: string = 'text';
+  @Input() value: string = '';
+  @Input() error: string = '';
+  @Input() autocomplete: string | null = null;
 
+  /** Permite usar [(value)] */
+  @Output() valueChange = new EventEmitter<string>();
 
-  @Input()
-  label:string = '';
-
-
-  @Input()
-  placeholder:string = '';
-
-
-  @Input()
-  type:string = 'text';
-
-
-  @Input()
-  value:string = '';
-
+  onInput(event: Event): void {
+    const next = (event.target as HTMLInputElement).value;
+    this.value = next;
+    this.valueChange.emit(next);
+  }
 }

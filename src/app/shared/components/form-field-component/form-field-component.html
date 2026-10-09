@@ -3,5 +3,16 @@
     {{ label }}
   </label>
 
-  <input [type]="type" [placeholder]="placeholder" [value]="value" />
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    [value]="value"
+    [attr.autocomplete]="autocomplete"
+    [class.invalid]="!!error"
+    (input)="onInput($event)"
+  />
+
+  @if (error) {
+    <small class="error">{{ error }}</small>
+  }
 </div>

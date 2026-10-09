@@ -303,3 +303,25 @@ grid-template-columns:repeat(2,1fr);
 
 
 }
+
+.continue-btn:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+.clear{
+  clear:both;
+}
+
+app-onboarding-card{
+  display:block;
+}
+
+@media(max-width:600px){
+  .continue-btn{
+    float:none;
+    width:100%;
+  }
+}

@@ -95,3 +95,19 @@ font-weight:600;
 cursor:pointer;
 
 }
+
+.server-error{
+  font-size:13px;
+  color:#ef4444;
+  text-align:center;
+}
+
+.register span,
+.forgot{
+  transition:.3s;
+}
+
+.register span:hover,
+.forgot:hover{
+  color:#0ea57c;
+}

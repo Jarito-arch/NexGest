@@ -4,45 +4,56 @@
   description="Cuéntanos sobre tu negocio y prepararemos NexGest para ti."
 >
   <app-auth-card>
-    <div class="signup-content">
+    <form class="signup-content" (submit)="submit($event)" novalidate>
       <div class="badge">✦ Crea tu espacio NexGest</div>
 
       <h1>Comencemos juntos</h1>
 
       <p>Completa tus datos para crear tu cuenta.</p>
 
-      <app-form-field label="Nombre completo" placeholder="¿Cómo te llamas?" type="text">
+      <app-form-field
+        label="Nombre completo"
+        placeholder="¿Cómo te llamas?"
+        type="text"
+        autocomplete="name"
+        [(value)]="name"
+        [error]="errors().name"
+      >
       </app-form-field>
 
-      <div class="email-confirm">
-        <label> Este es tu correo </label>
+      <app-form-field
+        label="Correo electrónico"
+        placeholder="correo@empresa.com"
+        type="email"
+        autocomplete="email"
+        [(value)]="email"
+        [error]="errors().email"
+      >
+      </app-form-field>
 
-        <div class="email-box">
-          <span> usuario@empresa.com </span>
+      <app-form-field
+        label="Contraseña"
+        placeholder="Crea una contraseña segura"
+        type="password"
+        autocomplete="new-password"
+        [(value)]="password"
+        [error]="errors().password"
+      >
+      </app-form-field>
 
-          <button type="button">✎</button>
-        </div>
-      </div>
+      @if (serverError()) {
+        <div class="server-error">{{ serverError() }}</div>
+      }
 
-      <div class="password-group">
-        <app-form-field label="Contraseña" placeholder="Crea una contraseña segura" type="password">
-        </app-form-field>
-
-        <app-form-field
-          label="Confirmar contraseña"
-          placeholder="Repite tu contraseña"
-          type="password"
-        >
-        </app-form-field>
-      </div>
-
-      <app-primary-button> Crear mi cuenta → </app-primary-button>
+      <app-primary-button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Creando cuenta...' : 'Crear mi cuenta →' }}
+      </app-primary-button>
 
       <div class="login-link">
         ¿Ya tienes una cuenta?
 
-        <span> Iniciar sesión </span>
+        <span routerLink="/login"> Iniciar sesión </span>
       </div>
-    </div>
+    </form>
   </app-auth-card>
 </app-auth-layout>

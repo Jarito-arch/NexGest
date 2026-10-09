@@ -1,0 +1,32 @@
+<app-onboarding-layout>
+  <app-step-indicator [currentStep]="4"> </app-step-indicator>
+
+  <div class="page-header">
+    <h1>¿Qué quieres lograr?</h1>
+    <p>Selecciona tus objetivos principales para priorizar tu experiencia.</p>
+  </div>
+
+  <app-onboarding-card>
+    <h2>Mis objetivos</h2>
+
+    <div class="grid-2">
+      @for (item of goals; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.goals().includes(item.title)"
+          (click)="state.toggle(state.goals, item.title)"
+        >
+        </app-option-card>
+      }
+    </div>
+  </app-onboarding-card>
+
+  <div class="actions">
+    <button class="back-btn" type="button" (click)="back()">← Atrás</button>
+
+    <app-primary-button type="button" [disabled]="!valid()" (click)="next()">
+      Continuar →
+    </app-primary-button>
+  </div>
+</app-onboarding-layout>

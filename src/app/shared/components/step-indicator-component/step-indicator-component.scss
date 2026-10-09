@@ -198,3 +198,40 @@
     }
 
 }
+
+/* PASO COMPLETADO */
+.step-item.done {
+  color: #22e6b8;
+}
+
+.step-item.done .step-number {
+  background: rgba(34, 230, 184, 0.18);
+  color: #22e6b8;
+  border: 1px solid rgba(34, 230, 184, 0.5);
+}
+
+.step-line.filled {
+  background: #22e6b8;
+  opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+  .step-item span {
+    display: none;
+  }
+
+  .step-item.active span {
+    display: inline;
+  }
+
+  .step-line {
+    width: 18px;
+    margin: 0 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .step-item.active span {
+    display: none;
+  }
+}
