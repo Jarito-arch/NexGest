@@ -1,0 +1,96 @@
+<main class="page">
+    <section class="page-header">
+        <div>
+            <h1>Proveedores</h1>
+            <p>Gestiona y consulta la información de tus proveedores</p>
+        </div><button class="btn-primary" type="button" (click)="nuevoProveedor()"><i class="bi bi-plus-lg"></i> Nuevo
+            proveedor</button>
+    </section>
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div><span>Proveedores</span><strong>{{ proveedores.length }}</strong><small>Registrados en tu
+                    negocio</small></div>
+            <div class="stat-icon"><i class="bi bi-building"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Con teléfono</span><strong>{{ conTelefono }}</strong><small>Contactables por teléfono</small>
+            </div>
+            <div class="stat-icon"><i class="bi bi-telephone"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Con correo</span><strong>{{ conCorreo }}</strong><small>Contactables por correo</small></div>
+            <div class="stat-icon"><i class="bi bi-envelope"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Con dirección</span><strong>{{ conDireccion }}</strong><small>Dirección registrada</small></div>
+            <div class="stat-icon"><i class="bi bi-geo-alt"></i></div>
+        </article>
+    </section>
+    <section class="content-grid">
+        <article class="panel suppliers-panel">
+            <div class="toolbar">
+                <div class="search"><i class="bi bi-search"></i><input type="search" placeholder="Buscar proveedor"
+                        [(ngModel)]="busqueda" aria-label="Buscar proveedor"></div>
+                <div class="filters"><button
+                        *ngFor="let opcion of ['Todos','Con teléfono','Con correo','Con dirección']" type="button"
+                        class="filter" [class.active]="filtro === opcion" (click)="filtro = opcion">{{ opcion
+                        }}</button></div>
+            </div>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>PROVEEDOR</th>
+                            <th>TELÉFONO</th>
+                            <th>CORREO</th>
+                            <th>DIRECCIÓN</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let proveedor of proveedoresFiltrados">
+                            <td>
+                                <div class="supplier-name"><span class="avatar">{{ iniciales(proveedor.nombre)
+                                        }}</span><strong>{{ proveedor.nombre }}</strong></div>
+                            </td>
+                            <td>{{ proveedor.telefono || '—' }}</td>
+                            <td>{{ proveedor.correo || 'Sin registrar' }}</td>
+                            <td>{{ proveedor.direccion || 'Sin registrar' }}</td>
+                            <td>
+                                <div class="actions"><button type="button"
+                                        [attr.aria-label]="'Eliminar ' + proveedor.nombre" title="Eliminar"
+                                        (click)="eliminar(proveedor)"><i class="bi bi-trash3"></i></button></div>
+                            </td>
+                        </tr>
+                        <tr *ngIf="proveedoresFiltrados.length === 0">
+                            <td colspan="5" class="empty-row">No se encontraron proveedores.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer">Mostrando {{ proveedoresFiltrados.length }} de {{ proveedores.length }}
+                proveedores</div>
+        </article>
+        <aside class="panel contacts">
+            <div class="panel-title">
+                <h2>Contactos rápidos</h2>
+            </div>
+            <div class="contact" *ngFor="let proveedor of proveedores.slice(0, 3)"><span class="avatar">{{
+                    iniciales(proveedor.nombre) }}</span>
+                <div><strong>{{ proveedor.nombre }}</strong><small *ngIf="proveedor.telefono"><i
+                            class="bi bi-telephone"></i> {{ proveedor.telefono }}</small><small
+                        *ngIf="proveedor.correo"><i class="bi bi-envelope"></i> {{ proveedor.correo }}</small></div>
+            </div>
+            <div class="contact-empty" *ngIf="proveedores.length === 0">Agrega proveedores para ver contactos aquí.
+            </div>
+        </aside>
+    </section>
+    <section class="panel information">
+        <div class="info-card"><i class="bi bi-telephone"></i><strong>{{ proveedores.length - conTelefono }}
+                proveedores</strong><span>sin teléfono registrado</span></div>
+        <div class="info-card"><i class="bi bi-envelope"></i><strong>{{ proveedores.length - conCorreo }}
+                proveedores</strong><span>sin correo electrónico</span></div>
+        <div class="info-card"><i class="bi bi-geo-alt"></i><strong>{{ proveedores.length - conDireccion }}
+                proveedores</strong><span>sin dirección registrada</span></div>
+    </section>
+</main>

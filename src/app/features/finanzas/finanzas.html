@@ -1,0 +1,259 @@
+<main class="page">
+    <section class="page-header">
+        <div>
+            <h1>Finanzas</h1>
+            <p>Controla los ingresos y gastos de tu negocio</p>
+        </div>
+
+        <button class="btn-primary" type="button" (click)="registrarMovimiento()">
+            <i class="bi bi-plus-lg"></i>
+            Registrar movimiento
+        </button>
+    </section>
+
+    <section class="stats-grid">
+
+        <article class="stat-card">
+            <div class="stat-info">
+                <span>Ingresos</span>
+                <strong>S/ {{ ingresos | number:'1.2-2' }}</strong>
+                <small>{{ cantidadIngresos }} movimientos de ingreso</small>
+            </div>
+            <div class="stat-icon income">
+                <i class="bi bi-arrow-down-left"></i>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-info">
+                <span>Gastos</span>
+                <strong>S/ {{ gastos | number:'1.2-2' }}</strong>
+                <small>{{ cantidadGastos }} movimientos de gasto</small>
+            </div>
+            <div class="stat-icon expense">
+                <i class="bi bi-arrow-up-right"></i>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-info">
+                <span>Balance</span>
+                <strong>S/ {{ balance | number:'1.2-2' }}</strong>
+                <small>Balance de los movimientos visibles</small>
+            </div>
+            <div class="stat-icon balance">
+                <i class="bi bi-wallet2"></i>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-info">
+                <span>Movimientos</span>
+                <strong>{{ movimientos.length }}</strong>
+                <small>Registros totales</small>
+            </div>
+            <div class="stat-icon movements">
+                <i class="bi bi-arrow-left-right"></i>
+            </div>
+        </article>
+
+    </section>
+
+    <section class="toolbar">
+
+        <div class="search">
+            <i class="bi bi-search"></i>
+            <input type="search" placeholder="Buscar movimiento..." [(ngModel)]="busqueda"
+                aria-label="Buscar movimientos" />
+        </div>
+
+        <div class="filters">
+
+            <button class="filter" [class.active]="tipoSeleccionado === 'Todos'" type="button"
+                (click)="tipoSeleccionado = 'Todos'">
+                Todos
+            </button>
+
+            <button class="filter" [class.active]="tipoSeleccionado === 'Ingreso'" type="button"
+                (click)="tipoSeleccionado = 'Ingreso'">
+                Ingresos
+            </button>
+
+            <button class="filter" [class.active]="tipoSeleccionado === 'Gasto'" type="button"
+                (click)="tipoSeleccionado = 'Gasto'">
+                Gastos
+            </button>
+
+            <select [(ngModel)]="categoriaSeleccionada" aria-label="Categoría">
+                <option>Todas</option>
+                <option>Ventas</option>
+                <option>Servicios</option>
+                <option>Publicidad</option>
+                <option>Insumos</option>
+            </select>
+
+        </div>
+
+    </section>
+
+    <section class="finance-grid">
+
+        <article class="panel chart-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Evolución de ingresos y gastos</h2>
+                    <span>Últimos 6 meses, en soles</span>
+                </div>
+
+                <div class="legend">
+                    <span>
+                        <i class="income-dot"></i>
+                        Ingresos
+                    </span>
+
+                    <span>
+                        <i class="expense-dot"></i>
+                        Gastos
+                    </span>
+                </div>
+            </div>
+
+            <div class="chart">
+
+                <div class="chart-y">
+                    <span>24k</span>
+                    <span>18k</span>
+                    <span>12k</span>
+                    <span>6k</span>
+                    <span>0</span>
+                </div>
+
+                <div class="chart-area">
+
+                    <div class="line income-line">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="line expense-line">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+
+                    <div class="chart-months">
+                        <span>Mar</span>
+                        <span>Abr</span>
+                        <span>May</span>
+                        <span>Jun</span>
+                        <span>Jul</span>
+                        <span>Ago</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+        <article class="panel period-panel">
+
+            <div class="panel-header">
+                <div>
+                    <h2>Resumen del período</h2>
+                    <span>Agosto 2026</span>
+                </div>
+            </div>
+
+            <div class="period-values">
+
+                <div>
+                    <span>Ingresos</span>
+                    <strong class="green">S/ {{ ingresos | number:'1.2-2' }}</strong>
+                </div>
+
+                <div>
+                    <span>Gastos</span>
+                    <strong class="red">S/ {{ gastos | number:'1.2-2' }}</strong>
+                </div>
+
+                <div>
+                    <span>Balance</span>
+                    <strong>S/ {{ balance | number:'1.2-2' }}</strong>
+                </div>
+
+            </div>
+
+            <div class="category-title">
+                <span>Gastos por categoría</span>
+            </div>
+
+            <div class="category" *ngFor="let categoria of gastosPorCategoria">
+                <div class="category-top"><span>{{ categoria.nombre }}</span><strong>S/ {{ categoria.monto |
+                        number:'1.2-2' }}</strong></div>
+                <div class="progress"><span [style.width.%]="categoria.porcentaje"></span></div>
+            </div>
+
+        </article>
+
+    </section>
+
+    <section class="panel movements-panel">
+
+        <div class="panel-header">
+            <div>
+                <h2>Movimientos recientes</h2>
+                <span>Últimas operaciones registradas</span>
+            </div>
+
+            <button class="text-button">
+                Ver todos
+                <i class="bi bi-arrow-right"></i>
+            </button>
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>FECHA</th>
+                        <th>TIPO</th>
+                        <th>CATEGORÍA</th>
+                        <th>DESCRIPCIÓN</th>
+                        <th class="right">MONTO</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let movimiento of movimientosFiltrados">
+                        <td>{{ movimiento.fecha }}</td>
+                        <td><span class="badge" [class.income-badge]="movimiento.tipo === 'Ingreso'"
+                                [class.expense-badge]="movimiento.tipo === 'Gasto'">{{ movimiento.tipo }}</span></td>
+                        <td>{{ movimiento.categoria }}</td>
+                        <td>{{ movimiento.descripcion }}</td>
+                        <td class="amount" [class.positive]="movimiento.tipo === 'Ingreso'"
+                            [class.negative]="movimiento.tipo === 'Gasto'">{{ movimiento.tipo === 'Ingreso' ? '+' : '−'
+                            }} S/ {{ movimiento.monto | number:'1.2-2' }}</td>
+                    </tr>
+                    <tr *ngIf="movimientosFiltrados.length === 0">
+                        <td colspan="5" class="empty-row">No hay movimientos para los filtros seleccionados.</td>
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>

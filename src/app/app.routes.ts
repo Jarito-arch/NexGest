@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './pages/dashboard/dashboard';
-import { Clientes } from './pages/clientes/clientes';
-import { Finanzas } from './pages/finanzas/finanzas';
-import { Ventas } from './pages/ventas/ventas';
-import { Proveedores } from './pages/proveedores/proveedores';
-import { Inventario } from './pages/inventario/inventario';
+import { Dashboard } from './features/dashboard/dashboard';
+import { Clientes } from './features/clientes/clientes';
+import { Finanzas } from './features/finanzas/finanzas';
+import { Ventas } from './features/ventas/ventas';
+import { Proveedores } from './features/proveedores/proveedores';
+import { Inventario } from './features/inventario/inventario';
+import { CustomModules } from './features/custom-modules/custom-modules';
 
 export const routes: Routes = [
-
     {
         path: '',
         redirectTo: 'dashboard',
@@ -16,30 +16,42 @@ export const routes: Routes = [
 
     {
         path: 'dashboard',
-        component: Dashboard
+        component: Dashboard,
+        data: { title: 'Dashboard' }
     },
-    
+
     {
         path: 'clientes',
-        component: Clientes
+        component: Clientes,
+        data: { title: 'Clientes' }
+
     },
 
     {
         path: 'finanzas',
-        component: Finanzas
+        component: Finanzas,
+        data: { title: 'Finanzas' }
     },
 
     {
         path: 'ventas',
-        component: Ventas
+        component: Ventas,
+        data: { title: 'Ventas' }
     },
 
     {
         path: 'proveedores',
-        component: Proveedores
+        component: Proveedores,
+        data: { title: 'Proveedores' }
     },
     {
         path: 'inventario',
-        component: Inventario
+        component: Inventario,
+        data: { title: 'Inventario' }
+    },
+    {
+        path: 'custom-modules',
+        component: CustomModules,
+        data: { title: 'Nuevo Módulo' }
     }
 ];

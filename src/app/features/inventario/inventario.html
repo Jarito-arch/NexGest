@@ -1,0 +1,118 @@
+<main class="page">
+    <section class="page-header">
+        <div>
+            <h1>Inventario</h1>
+            <p>Controla tus productos, existencias y movimientos</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn-secondary" type="button" (click)="registrarEntrada()"><i
+                    class="bi bi-box-arrow-in-down"></i> Registrar entrada</button>
+            <button class="btn-primary" type="button" (click)="nuevoProducto()"><i class="bi bi-plus-lg"></i> Nuevo
+                producto</button>
+        </div>
+    </section>
+
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div><span>Productos</span><strong>{{ productos.length }}</strong><small>Registrados en inventario</small>
+            </div>
+            <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Stock disponible</span><strong>{{ unidadesDisponibles | number }}</strong><small>Unidades
+                    disponibles</small></div>
+            <div class="stat-icon"><i class="bi bi-stack"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Stock bajo</span><strong class="warning-number">{{ productosBajos }}</strong><small>Requieren
+                    reposición</small></div>
+            <div class="stat-icon warning"><i class="bi bi-exclamation-triangle"></i></div>
+        </article>
+        <article class="stat-card">
+            <div><span>Valor del inventario</span><strong>S/ {{ valorInventario | number:'1.2-2' }}</strong><small>Valor
+                    estimado actual</small></div>
+            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+        </article>
+    </section>
+
+    <section class="toolbar">
+        <div class="search"><i class="bi bi-search"></i><input type="search" placeholder="Buscar producto..."
+                [(ngModel)]="busqueda" aria-label="Buscar producto"></div>
+        <select [(ngModel)]="categoriaSeleccionada" aria-label="Filtrar por categoría">
+            <option value="Todas">Todas las categorías</option>
+            <option>Café</option>
+            <option>Lácteos</option>
+            <option>Insumos</option>
+            <option>Postres</option>
+        </select>
+        <select [(ngModel)]="estadoSeleccionado" aria-label="Filtrar por estado">
+            <option value="Todos">Todos los estados</option>
+            <option>Disponible</option>
+            <option>Stock bajo</option>
+            <option>Agotándose</option>
+            <option>Agotado</option>
+        </select>
+    </section>
+
+    <section class="panel">
+        <div class="panel-header">
+            <div>
+                <h2>Productos</h2><span>Listado de productos registrados</span>
+            </div><button class="text-button" type="button" (click)="verMovimientos()">Ver movimientos <i
+                    class="bi bi-arrow-right"></i></button>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>PRODUCTO</th>
+                        <th>CATEGORÍA</th>
+                        <th>STOCK</th>
+                        <th>PRECIO</th>
+                        <th>ESTADO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let producto of productosFiltrados">
+                        <td>
+                            <div class="product"><span class="product-icon"><i class="bi bi-box-seam"></i></span>
+                                <div><strong>{{ producto.nombre }}</strong><small>SKU: {{ producto.sku }}</small></div>
+                            </div>
+                        </td>
+                        <td>{{ producto.categoria }}</td>
+                        <td><strong>{{ producto.stock }}</strong> unidades</td>
+                        <td>S/ {{ producto.precio | number:'1.2-2' }}</td>
+                        <td><span class="status"
+                                [ngClass]="{available: estadoDe(producto) === 'Disponible', low: estadoDe(producto) === 'Stock bajo', critical: estadoDe(producto) === 'Agotándose' || estadoDe(producto) === 'Agotado'}">{{
+                                estadoDe(producto) }}</span></td>
+                        <td>
+                            <div class="actions"><button type="button" title="Registrar entrada"
+                                    aria-label="Registrar entrada" (click)="registrarEntrada(producto)"><i
+                                        class="bi bi-box-arrow-in-down"></i></button><button type="button"
+                                    title="Editar precio" aria-label="Editar precio"
+                                    (click)="editarProducto(producto)"><i class="bi bi-pencil"></i></button></div>
+                        </td>
+                    </tr>
+                    <tr *ngIf="productosFiltrados.length === 0">
+                        <td colspan="6" class="empty-state">No se encontraron productos con esos filtros.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="alerts">
+        <div class="alert-card">
+            <div class="alert-icon"><i class="bi bi-exclamation-triangle"></i></div>
+            <div><strong>{{ productosBajos }} productos tienen stock bajo</strong><span>Revisa estos productos para
+                    evitar quiebres de stock.</span></div><button type="button"
+                (click)="estadoSeleccionado = 'Stock bajo'">Revisar</button>
+        </div>
+        <div class="alert-card">
+            <div class="alert-icon"><i class="bi bi-arrow-repeat"></i></div>
+            <div><strong>{{ movimientos.length }} movimientos registrados</strong><span>Consulta las entradas recientes
+                    de inventario.</span></div><button type="button" (click)="verMovimientos()">Ver movimientos</button>
+        </div>
+    </section>
+</main>

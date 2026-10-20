@@ -1,0 +1,304 @@
+<main class="page" id="dash">
+  <button *ngIf="!asistenteAbierto" class="assistant-launcher" type="button" (click)="asistenteAbierto = true"
+    aria-expanded="false" aria-controls="decision-assistant">
+    <i class="bi bi-stars"></i><span>Asistente de decisiones</span>
+  </button>
+  <div class="items">
+    <!-- <div class="dropdown">
+      <button class="btn pulse">Exportar resumen</button>
+      <div class="dropdown-content">
+        <a><i class="bi bi-filetype-pdf"></i> PDF</a>
+        <a><i class="bi bi-filetype-xlsx"></i> Excel</a>
+      </div>
+    </div> -->
+    <div class="kpis" id="kpis">
+      <div class="card kpi"><small>Ventas del mes</small>
+        <div class="n">S/ 248,600</div>
+        <div class="dl up">▲ 12.4% vs. mes anterior</div>
+        <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 31 L14 27 L28 30 L42 18 L57 22 L70 13 L84 16 L100 4" />
+        </svg>
+      </div>
+      <div class="card kpi"><small>Ingresos netos</small>
+        <div class="n">S/ 87,340</div>
+        <div class="dl up">▲ 8.1% vs. mes anterior</div>
+        <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 29 L14 30 L28 23 L42 26 L57 17 L70 19 L84 12 L100 6" />
+        </svg>
+      </div>
+      <div class="card kpi"><small>Productos en stock</small>
+        <div class="n">3,842</div>
+        <div class="dl dn">▼ 2.3% vs. mes anterior</div>
+        <svg class="sparkline negative" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 7 L14 9 L28 12 L42 13 L57 20 L70 19 L84 27 L100 32" />
+        </svg>
+      </div>
+      <div class="card kpi"><small>Pedidos pendientes</small>
+        <div class="n">46</div>
+        <div class="dl up">▼ 14% vs. mes anterior</div>
+        <svg class="sparkline" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 7 L14 11 L28 10 L42 18 L57 16 L70 24 L84 27 L100 34" />
+        </svg>
+      </div>
+    </div>
+    <div class="g g2">
+      <div class="card">
+        <div class="row">
+          <div>
+            <h3>Ventas e ingresos</h3>
+            <div class="leg">
+              <span><b style="background-color: #0D9488;"></b>Ventas</span>
+              <span><b style="background-color: #0284C7;"></b>Ingresos netos</span>
+            </div>
+          </div>
+          <div class="seg" id="per">
+            <button type="button" [class.on]="periodo === 7" (click)="periodo = 7">7 días</button>
+            <button type="button" [class.on]="periodo === 30" (click)="periodo = 30">30 días</button>
+            <button type="button" [class.on]="periodo === 12" (click)="periodo = 12">12 meses</button>
+          </div>
+        </div>
+        <div class="line-chart" role="img" aria-label="Gráfico de ventas e ingresos"><svg viewBox="0 0 640 250"
+            preserveAspectRatio="none">
+            <g class="chart-grid">
+              <line *ngFor="let y of [25, 75, 125, 175, 225]" x1="38" x2="632" [attr.y1]="y" [attr.y2]="y" />
+            </g>
+            <g class="chart-axis"><text *ngFor="let y of [25, 75, 125, 175, 225]; let i = index" x="0"
+                [attr.y]="y + 4">{{ 100 - i * 25 }}</text><text *ngFor="let punto of puntosGrafico; let i = index"
+                [attr.x]="38 + i * (594 / (puntosGrafico.length - 1))" y="246" text-anchor="middle">{{ punto.etiqueta
+                }}</text></g>
+            <path class="chart-area" [attr.d]="chartArea('ventas')" />
+            <path class="chart-line sales-line" [attr.d]="chartPath('ventas')" />
+            <path class="chart-line income-line" [attr.d]="chartPath('ingresos')" />
+            <g class="chart-dots">
+              <circle *ngFor="let punto of puntosGrafico; let i = index"
+                [attr.cx]="38 + i * (594 / (puntosGrafico.length - 1))" [attr.cy]="225 - punto.ventas * 2" r="3.5" />
+              <circle class="income-dot" *ngFor="let punto of puntosGrafico; let i = index"
+                [attr.cx]="38 + i * (594 / (puntosGrafico.length - 1))" [attr.cy]="225 - punto.ingresos * 2" r="3" />
+            </g>
+          </svg></div>
+      </div>
+      <div class="card">
+        <h3>Meta mensual de ventas</h3>
+        <div class="gauge" role="img" aria-label="Meta mensual alcanzada: 78%">
+          <div class="gauge-ring"><strong>78%</strong><small>de la meta</small></div>
+          <p>S/ 42,680 de S/ 55,000</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="g g3">
+      <div class="card">
+        <h3>Estado del inventario</h3>
+        <div class="dn-w">
+          <div class="stock-chart" role="img" aria-label="Distribución del inventario">
+            <div class="stock-ring"><strong>3,842</strong><small>productos</small></div>
+          </div>
+          <ul class="lg" id="lg">
+            <li>
+              <i></i>
+              En stock
+              <b>3120</b>
+            </li>
+            <li>
+              <i></i>
+              Stock bajo
+              <b>540</b>
+            </li>
+            <li>
+              <i></i>
+              Agotado
+              <b>182</b>
+            </li>
+          </ul>
+
+        </div>
+        <h3 class="subsection-title">Productos con stock bajo</h3>
+        <div id="low">
+          <div class="bar">
+            <div class="t">
+              <span>Teclado inalámbrico K2</span>
+              <b>0/15</b>
+            </div>
+            <div class="bt">
+              <i class="e" data-w="4" style="width: 4%"></i>
+            </div>
+          </div>
+          <div class="bar">
+            <div class="t">
+              <span>Mouse M3</span>
+              <b>12/25</b>
+            </div>
+            <div class="bt">
+              <i class="w" data-w="48" style="width: 48%"></i>
+            </div>
+          </div>
+          <div class="bar">
+            <div class="t">
+              <span>Lámpara LED</span>
+              <b>9/15</b>
+            </div>
+            <div class="bt">
+              <i class="w" data-w="60" style="width: 60%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Rendimiento por categoría</h3>
+        <div id="perf">
+          <div class="bar">
+            <div class="t">
+              <span>Electrónica</span><b>92%</b>
+            </div>
+            <div class="bt"><i data-w="92" style="width: 92%"></i></div>
+          </div>
+          <div class="bar">
+            <div class="t"><span>Hogar</span><b>78%</b></div>
+            <div class="bt"><i data-w="78" style="width: 78%"></i></div>
+          </div>
+          <div class="bar">
+            <div class="t"><span>Oficina</span><b>64%</b></div>
+            <div class="bt"><i data-w="64" style="width: 64%"></i></div>
+          </div>
+          <div class="bar">
+            <div class="t"><span>Accesorios</span><b>51%</b></div>
+            <div class="bt"><i data-w="51" style="width: 51%"></i></div>
+          </div>
+          <small>Porcentaje de la meta cumplida por categoría</small>
+        </div>
+      </div>
+      <div class="card" id="alc">
+        <div class="row">
+          <h3>Alertas</h3><span class="pill e" id="ac">{{ alertasVisibles.length }}</span>
+        </div>
+        <ul class="al" id="al">
+          <li *ngFor="let alerta of alertasVisibles; let i = index" [class.er]="i === 0">
+            <p>{{ alerta }}<br><small>{{ i === 0 ? 'Hace 12 min' : 'Hace ' + (i + 1) + ' h' }}</small></p><button
+              class="x" aria-label="Descartar alerta" (click)="descartarAlerta(i)">✕</button>
+          </li>
+          <!--
+          <li class="er" data-i="0">
+            <p>Stock agotado: Teclado inalámbrico K2<br><small>Hace 12 min</small></p><button class="x"
+              aria-label="Descartar">✕</button>
+          </li>
+          <li class="" data-i="1">
+            <p>Factura #F-1042 vence mañana<br><small>Hace 1 h</small></p><button class="x"
+              aria-label="Descartar">✕</button>
+          </li>
+          <li class="" data-i="2">
+            <p>5 productos bajo el mínimo<br><small>Hace 2 h</small></p><button class="x"
+              aria-label="Descartar">✕</button>
+          </li>
+          <li class="in" data-i="3">
+            <p>Cierre de caja pendiente de revisión<br><small>Hace 4 h</small></p><button class="x"
+              aria-label="Descartar">✕</button>
+          </li>
+          -->
+        </ul>
+      </div>
+    </div>
+
+    <div class="g g4">
+      <div class="card">
+        <h3>Actividad reciente</h3>
+        <ul class="fd" id="fd">
+          <li><span class="d"><i class="bi bi-check-lg"></i></span>
+            <div>
+              <p>Venta #V-2381 registrada · $1,240</p><small>Ana Ruiz · hace 5 min</small>
+            </div>
+          </li>
+          <li><span class="d"><i class="bi bi-check-lg"></i></span>
+            <div>
+              <p>Ingreso de 200 unidades de Mouse M3</p><small>Carlos Díaz · hace 40 min</small>
+            </div>
+          </li>
+          <li><span class="d"><i class="bi bi-check-lg"></i></span>
+            <div>
+              <p>Nuevo cliente: Comercial Andina</p><small>Ana Ruiz · hace 1 h</small>
+            </div>
+          </li>
+          <li><span class="d"><i class="bi bi-check-lg"></i></span>
+            <div>
+              <p>Ajuste de inventario en Bodega 2</p><small>Luis Prado · hace 3 h</small>
+            </div>
+          </li>
+          <li><span class="d"><i class="bi bi-check-lg"></i></span>
+            <div>
+              <p>Pago recibido de Grupo Delta · $5,800</p><small>Sistema · hace 5 h</small>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="row">
+          <h3>Últimas ventas</h3><button class="x" data-go="ventas">Ver todas</button>
+        </div>
+        <div class="tw">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tv">
+              <tr>
+                <td>V-2381</td>
+                <td>Comercial Andina</td>
+                <td>$1240</td>
+                <td><span class="pill ">Pagado</span></td>
+              </tr>
+              <tr>
+                <td>V-2380</td>
+                <td>Grupo Delta</td>
+                <td>$5800</td>
+                <td><span class="pill ">Pagado</span></td>
+              </tr>
+              <tr>
+                <td>V-2379</td>
+                <td>Tecno Sur</td>
+                <td>$460</td>
+                <td><span class="pill w">Pendiente</span></td>
+              </tr>
+              <tr>
+                <td>V-2378</td>
+                <td>Ofi-Express</td>
+                <td>$390</td>
+                <td><span class="pill ">Pagado</span></td>
+              </tr>
+              <tr>
+                <td>V-2377</td>
+                <td>Hogar Plus</td>
+                <td>$720</td>
+                <td><span class="pill e">Cancelado</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section *ngIf="asistenteAbierto" class="assistant-panel" id="decision-assistant"
+    aria-label="Asistente de decisiones">
+    <header class="assistant-header">
+      <div class="assistant-mark"><i class="bi bi-stars"></i></div>
+      <div><strong>Asistente de decisiones</strong><small>Consulta tus indicadores del negocio</small></div><button
+        type="button" aria-label="Cerrar asistente" (click)="asistenteAbierto = false">×</button>
+    </header>
+    <div class="assistant-messages" aria-live="polite">
+      <div *ngFor="let mensaje of mensajes" class="assistant-message" [class.from-user]="mensaje.autor === 'usuario'">
+        <span>{{ mensaje.texto }}</span>
+      </div>
+      <div *ngIf="consultando" class="assistant-message"><span>Analizando tu consulta…</span></div>
+    </div>
+    <div class="assistant-suggestions"><button type="button"
+        (click)="consulta = '¿Qué debería revisar para reducir gastos?'">Reducir gastos</button><button type="button"
+        (click)="consulta = '¿Qué productos debo reponer?'">Revisar inventario</button></div>
+    <form class="assistant-form" (ngSubmit)="enviarConsulta()"><input [(ngModel)]="consulta" name="consulta" type="text"
+        placeholder="Escribe tu consulta…" aria-label="Escribe tu consulta" [disabled]="consultando"><button
+        type="submit" aria-label="Enviar consulta" [disabled]="consultando || !consulta.trim()"><i
+          class="bi bi-arrow-up"></i></button></form>
+  </section>
+</main>

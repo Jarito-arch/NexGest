@@ -3,17 +3,13 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "75ebbeba-10dd-42c8-bfce-641932fbb795"
+    "analytics": "04800c98-ce93-4c82-af6b-2ffd0bac989e"
   },
   "newProjectRoot": "projects",
   "projects": {
-    "nexgest-angular": {
+    "NexGest": {
       "projectType": "application",
-      "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
-        }
-      },
+      "schematics": {},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -23,7 +19,6 @@
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
@@ -31,8 +26,16 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
-            ]
+              "src/styles.css"
+            ],
+            "server": "src/main.server.ts",
+            "outputMode": "server",
+            "security": {
+              "allowedHosts": []
+            },
+            "ssr": {
+              "entry": "src/server.ts"
+            }
           },
           "configurations": {
             "production": {
@@ -62,10 +65,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "nexgest-angular:build:production"
+              "buildTarget": "NexGest:build:production"
             },
             "development": {
-              "buildTarget": "nexgest-angular:build:development"
+              "buildTarget": "NexGest:build:development"
             }
           },
           "defaultConfiguration": "development"

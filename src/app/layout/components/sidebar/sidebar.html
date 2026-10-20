@@ -1,0 +1,65 @@
+<aside class="sideBar">
+  <div class="logo">
+    <img ngSrc="/logoNexGest.png" width="200" height="100" priority class="logo-icon" />
+  </div>
+
+  <div class="navigationBar">
+
+    <nav class="menu">
+
+      <a class="menu-item" routerLink="/dashboard" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">
+        <i class="bi bi-speedometer2"></i>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="menu-item" routerLink="/ventas" routerLinkActive="active">
+        <i class="bi bi-cart3"></i>
+        <span>Ventas</span>
+      </a>
+
+      <a class="menu-item" routerLink="/inventario" routerLinkActive="active">
+        <i class="bi bi-box-seam"></i>
+        <span>Inventario</span>
+      </a>
+
+      <a class="menu-item" routerLink="/finanzas" routerLinkActive="active">
+        <i class="bi bi-cash-stack"></i>
+        <span>Finanzas</span>
+      </a>
+
+      <a class="menu-item" routerLink="/clientes" routerLinkActive="active">
+        <i class="bi bi-people"></i>
+        <span>Clientes</span>
+      </a>
+
+      <a class="menu-item" routerLink="/proveedores" routerLinkActive="active">
+        <i class="bi bi-truck"></i>
+        <span>Proveedores</span>
+      </a>
+
+      <div class="tab"></div>
+
+    </nav>
+
+    <nav class="ownerModules">
+      <span *ngIf="customModules().length">Mis módulos</span>
+      <a *ngFor="let modulo of customModules()" routerLink="/custom-modules" [queryParams]="{ modulo: modulo.id }"
+        [title]="modulo.nombre" [class.paused]="!modulo.activo">
+        <i class="bi" [ngClass]="modulo.icono"></i>
+        <span>{{ modulo.nombre }}</span>
+      </a>
+      <a routerLink="/custom-modules" title="Crear módulo"><i class="bi bi-plus-lg"></i><span>Crear módulo</span></a>
+    </nav>
+
+    <nav class="systemModules">
+      <a routerLink="/centroInteligencia">
+        Centro de Inteligencia
+      </a>
+      <a routerLink="/planAccion">
+        Plan de Acción
+      </a>
+    </nav>
+
+  </div>
+</aside>

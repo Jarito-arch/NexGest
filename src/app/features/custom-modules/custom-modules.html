@@ -1,0 +1,169 @@
+<main class="modules-page">
+    <header class="modules-heading">
+        <div>
+            <span class="eyebrow">PERSONALIZA TU ESPACIO</span>
+            <h1>Constructor de módulos</h1>
+            <p>Crea espacios de trabajo con los campos que necesita tu operación.</p>
+        </div>
+        <span class="module-count"><i class="bi bi-grid-3x3-gap"></i>{{ modulos.length }} módulos</span>
+    </header>
+
+    <div class="stepper" aria-label="Progreso del constructor">
+        <ng-container *ngFor="let etiqueta of pasos; let i = index">
+            <button type="button" class="step" [class.done]="paso > i" [class.current]="paso === i"
+                [class.todo]="paso < i" [disabled]="paso <= i" (click)="irAlPaso(i)">
+                <span class="step-num">{{ paso > i ? '✓' : i + 1 }}</span><span class="step-label">{{ etiqueta }}</span>
+            </button>
+            <span class="step-line" *ngIf="i < pasos.length - 1"></span>
+        </ng-container>
+    </div>
+
+    <section class="builder-panel" *ngIf="!moduloCreado">
+        <div class="step-heading">
+            <span class="step-kicker">PASO {{ paso + 1 }} DE {{ pasos.length }}</span>
+            <h2>{{ titulos[paso] }}</h2>
+            <p>{{ descripciones[paso] }}</p>
+        </div>
+
+        <div class="step-content" *ngIf="paso === 0">
+            <label class="field-label">Nombre del módulo<input [(ngModel)]="nombre" maxlength="50"
+                    placeholder="Ej. Reservas" autofocus></label>
+            <label class="field-label">Descripción<textarea [(ngModel)]="descripcion" maxlength="140" rows="3"
+                    placeholder="¿Para qué servirá este módulo?"></textarea></label>
+            <label class="field-label">Categoría<select [(ngModel)]="categoria">
+                    <option>Operaciones</option>
+                    <option>Administración</option>
+                    <option>Comercial</option>
+                </select></label>
+        </div>
+
+        <div class="step-content fields-step" *ngIf="paso === 1">
+            <section class="panel-card">
+                <div class="panel-title"><i class="bi bi-list-ul"></i> Campos del módulo</div>
+                <p class="panel-copy">Agrega los datos que quieres guardar. Puedes cambiar el tipo de cada campo.</p>
+                <div class="field-row" *ngFor="let campo of campos; let i = index">
+                    <span class="field-drag"><i class="bi bi-grip-vertical"></i></span>
+                    <span class="field-name">{{ campo.nombre }}</span>
+                    <span class="field-type-badge"><i class="bi" [ngClass]="iconoTipo(campo.tipo)"></i>{{ campo.tipo
+                        }}</span>
+                    <button type="button" class="field-remove" aria-label="Eliminar campo" (click)="quitarCampo(i)"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <div class="add-field-row"><input [(ngModel)]="nuevoCampo" placeholder="Nombre del campo" maxlength="40"
+                        (keydown.enter)="$event.preventDefault(); agregarCampo()"><select [(ngModel)]="tipoNuevoCampo"
+                        aria-label="Tipo del campo">
+                        <option *ngFor="let tipo of tiposCampo" [value]="tipo">{{ tipo }}</option>
+                    </select><button type="button" class="secondary-button" (click)="agregarCampo()"
+                        [disabled]="!nuevoCampo.trim()"><i class="bi bi-plus-lg"></i> Añadir campo</button></div>
+            </section>
+            <aside class="type-panel">
+                <h3>Tipos disponibles</h3>
+                <p>Elige el formato adecuado para cada dato.</p>
+                <div class="type-grid"><button type="button" class="type-option" *ngFor="let tipo of tiposCampo"
+                        [class.selected]="tipoNuevoCampo === tipo" (click)="tipoNuevoCampo = tipo"><i class="bi"
+                            [ngClass]="iconoTipo(tipo)"></i><span>{{ tipo }}</span></button></div>
+            </aside>
+        </div>
+
+        <div class="step-content" *ngIf="paso === 2">
+            <section class="panel-card relation-card">
+                <div class="panel-title"><i class="bi bi-link-45deg"></i> Relacionar con otros módulos</div>
+                <p class="panel-copy">Conecta este módulo con información que ya administras. Este paso es opcional.</p>
+                <label class="field-label">Módulo relacionado<select [(ngModel)]="relacion">
+                        <option value="">Sin relación por ahora</option>
+                        <option>Clientes</option>
+                        <option>Ventas</option>
+                        <option>Inventario</option>
+                        <option>Proveedores</option>
+                        <option *ngFor="let modulo of modulos" [value]="modulo.nombre">{{ modulo.nombre }}</option>
+                    </select></label>
+                <div class="relation-preview" *ngIf="relacion"><span class="relation-node"><i class="bi bi-grid"></i>{{
+                        nombre
+                        || 'Nuevo módulo' }}</span><i class="bi bi-arrow-left-right"></i><span class="relation-node"><i
+                            class="bi bi-diagram-2"></i>{{ relacion }}</span></div>
+                <div class="relation-empty" *ngIf="!relacion"><i class="bi bi-bezier2"></i><span>Sin relaciones
+                        seleccionadas</span></div>
+            </section>
+        </div>
+
+        <div class="step-content" *ngIf="paso === 3">
+            <section class="preview-card">
+                <div class="preview-top"><span class="preview-icon"><i class="bi" [ngClass]="iconoModulo"></i></span>
+                    <div><span class="eyebrow">VISTA PREVIA</span>
+                        <h3>{{ nombre || 'Nombre del módulo' }}</h3>
+                    </div><span class="preview-status">Activo</span>
+                </div>
+                <p class="preview-description">{{ descripcion || 'Módulo personalizado para tu operación.' }}</p>
+                <div class="preview-meta"><span><i class="bi bi-folder2"></i>{{ categoria }}</span><span
+                        *ngIf="relacion"><i class="bi bi-link-45deg"></i>Relacionado con {{ relacion }}</span></div>
+                <div class="preview-fields">
+                    <h4>Campos</h4>
+                    <div class="preview-field" *ngFor="let campo of campos"><span>{{ campo.nombre }}</span><span
+                            class="field-type-badge"><i class="bi" [ngClass]="iconoTipo(campo.tipo)"></i>{{ campo.tipo
+                            }}</span></div>
+                    <p *ngIf="campos.length === 0" class="panel-copy">Agrega campos para completar tu módulo.</p>
+                </div>
+            </section>
+        </div>
+
+        <div class="step-content final-step" *ngIf="paso === 4">
+            <span class="final-icon"><i class="bi bi-check2-circle"></i></span>
+            <h3>Tu módulo está listo</h3>
+            <p><strong>{{ nombre }}</strong> se añadirá a tu espacio de trabajo y aparecerá en el sidebar.</p>
+            <div class="final-summary"><span><i class="bi bi-ui-checks"></i>{{ campos.length }} campos</span><span><i
+                        class="bi bi-folder2"></i>{{ categoria }}</span><span *ngIf="relacion"><i
+                        class="bi bi-link-45deg"></i>{{
+                    relacion }}</span></div>
+        </div>
+
+        <footer class="step-actions"><button type="button" class="secondary-button back-button" *ngIf="paso > 0"
+                (click)="volver()"><i class="bi bi-arrow-left"></i> Atrás</button><span class="action-spacer"
+                *ngIf="paso === 0"></span><button type="button" class="primary-button" *ngIf="paso < 4"
+                (click)="continuar()" [disabled]="paso === 0 && !nombre.trim()">Continuar <i
+                    class="bi bi-arrow-right"></i></button><button type="button" class="primary-button"
+                *ngIf="paso === 4" (click)="crearModulo()" [disabled]="!nombre.trim()">Crear módulo <i
+                    class="bi bi-check2"></i></button></footer>
+    </section>
+
+    <section class="created-banner" *ngIf="moduloCreado"><span class="created-icon"><i
+                class="bi bi-check-lg"></i></span>
+        <div>
+            <h2>{{ moduloCreado.nombre }} ya está en tu sidebar</h2>
+            <p>El módulo se guardó en este navegador. Puedes abrirlo desde el menú lateral.</p>
+        </div><button type="button" class="primary-button" (click)="nuevoModulo()">Crear otro <i
+                class="bi bi-plus-lg"></i></button>
+    </section>
+
+    <section class="module-list">
+        <div class="list-heading">
+            <div>
+                <h2>Tus módulos</h2>
+                <p>Los módulos activos también aparecen en el sidebar.</p>
+            </div><select [(ngModel)]="filtro" aria-label="Filtrar módulos">
+                <option>Todos</option>
+                <option>Operaciones</option>
+                <option>Administración</option>
+                <option>Comercial</option>
+            </select>
+        </div>
+        <div class="module-cards">
+            <article class="module-card" *ngFor="let modulo of modulosFiltrados">
+                <div class="module-icon"><i class="bi" [ngClass]="modulo.icono"></i></div>
+                <div class="module-info">
+                    <div class="module-title">
+                        <h3>{{ modulo.nombre }}</h3><span [class.off]="!modulo.activo">{{ modulo.activo ? 'Activo' :
+                            'Pausado'
+                            }}</span>
+                    </div>
+                    <p>{{ modulo.descripcion }}</p><small>{{ modulo.categoria }} · {{ modulo.campos?.length || 0 }}
+                        campos</small>
+                </div><button type="button" class="module-toggle" (click)="alternar(modulo)">{{ modulo.activo ? 'Pausar'
+                    :
+                    'Activar' }}</button>
+            </article>
+            <div class="module-empty" *ngIf="modulosFiltrados.length === 0"><i class="bi bi-grid"></i>
+                <p>No hay módulos en esta categoría todavía.</p>
+            </div>
+        </div>
+    </section>
+</main>

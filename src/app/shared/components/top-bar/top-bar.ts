@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 
@@ -9,9 +9,14 @@ import { filter } from 'rxjs';
   templateUrl: './top-bar.html',
   styleUrl: './top-bar.scss'
 })
-export class TopBar {
+export class TopBar implements OnDestroy {
 
   tituloPagina: string = 'Dashboard';
+
+  fechaActual: string = '';
+
+  private intervaloFecha?: ReturnType<typeof setInterval>;
+
 
   constructor(private router: Router) {
 
@@ -21,15 +26,22 @@ export class TopBar {
       )
       .subscribe((event: NavigationEnd) => {
 
-        console.log('Ruta actual:', event.urlAfterRedirects);
-
         this.cambiarTitulo(event.urlAfterRedirects);
 
       });
 
-    this.cambiarTitulo(this.router.url);
-  }
 
+    this.cambiarTitulo(this.router.url);
+
+    this.actualizarFecha();
+
+
+    this.intervaloFecha = setInterval(() => {
+
+      this.actualizarFecha();
+
+    }, 60000);
+  }
 
   cambiarTitulo(url: string): void {
 
@@ -63,4 +75,37 @@ export class TopBar {
 
     }
   }
+
+  actualizarFecha(): void {
+
+    const ahora = new Date();
+
+    const opciones: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long'
+    };
+
+    let fecha = new Intl.DateTimeFormat(
+      'es-PE',
+      opciones
+    ).format(ahora);
+
+
+    fecha =
+      fecha.charAt(0).toUpperCase() +
+      fecha.slice(1);
+
+
+    this.fechaActual = fecha;
+  }
+
+  ngOnDestroy(): void {
+
+    if (this.intervaloFecha) {
+      clearInterval(this.intervaloFecha);
+    }
+
+  }
+
 }
