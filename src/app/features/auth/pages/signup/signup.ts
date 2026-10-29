@@ -1,11 +1,11 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
-import { AuthLayoutComponent } from '../../shared/components/auth-layout-component/auth-layout-component';
-import { AuthCardComponent } from '../../shared/components/auth-card-component/auth-card-component';
-import { FormFieldComponent } from '../../shared/components/form-field-component/form-field-component';
-import { PrimaryButtonComponent } from '../../shared/components/primary-button-component/primary-button-component';
-import { AuthService } from '../../core/auth.service';
+import { AuthLayoutComponent } from '../../../../layout/auth-layout/auth-layout';
+import { AuthCardComponent } from '../../../../shared/components/auth-card/auth-card';
+import { FormFieldComponent } from '../../../../shared/components/form-field/form-field';
+import { PrimaryButtonComponent } from '../../../../shared/components/primary-button/primary-button';
+import { Auth } from '../../../../core/services/auth';
 
 @Component({
   selector: 'app-signup',
@@ -21,11 +21,11 @@ import { AuthService } from '../../core/auth.service';
   styleUrl: './signup.scss',
 })
 export class Signup {
-  private auth = inject(AuthService);
+  private auth = inject(Auth);
   private router = inject(Router);
 
   name = '';
-  email = this.auth.draftEmail();
+  email = '';
   password = '';
 
   loading = signal(false);
@@ -52,8 +52,10 @@ export class Signup {
       .subscribe({
         next: (res) => {
           this.loading.set(false);
-          if (res.ok) this.router.navigate(['/onboarding/step1']);
-          else this.serverError.set(res.message ?? 'No se pudo crear la cuenta');
+          if (res.ok) {
+            this.auth.signup();
+            this.router.navigate(['/onboarding/step1']);
+          } else this.serverError.set(res.message ?? 'No se pudo crear la cuenta');
         },
         error: () => {
           this.loading.set(false);
