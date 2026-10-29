@@ -1,0 +1,21 @@
+<div class="step-container">
+  @for (step of steps; track step.number; let i = $index; let last = $last) {
+    <div
+      class="step-item"
+      [class.active]="currentStep === i + 1"
+      [class.done]="currentStep > i + 1"
+    >
+      <div class="step-number">
+        @if (currentStep > i + 1) {
+          <ng-icon [svg]="checkIcon"></ng-icon>
+        } @else {
+          {{ step.number }}
+        }
+      </div>
+      <span>{{ step.title }}</span>
+    </div>
+    @if (!last) {
+      <div class="step-line" [class.filled]="currentStep > i + 1"></div>
+    }
+  }
+</div>

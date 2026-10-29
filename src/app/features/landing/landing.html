@@ -1,1 +1,138 @@
-<p>landing works!</p>
+<div class="landing-container">
+      <header class="navbar">
+        <div class="logo">
+          <span>N</span>
+          <strong>NexGest</strong>
+        </div>
+
+        <a class="login-btn" routerLink="/login">
+          <ng-icon [svg]="icons.login"></ng-icon>
+          Login
+        </a>
+      </header>
+
+      <main class="hero">
+        <section class="hero-content">
+          <div class="tag">
+            <span></span>
+            Gestión inteligente para tu negocio
+          </div>
+
+          <h1>
+            <span class="white-text">
+              {{ lineOne }}
+            </span>
+
+            <br />
+
+            <span class="white-text">
+              {{ lineTwo }}
+            </span>
+
+            <br />
+
+            <span class="green-text">
+              {{ lineThree }}
+            </span>
+
+            <br />
+
+            <span class="green-text">
+              {{ lineFour }}
+            </span>
+
+            <span class="cursor"></span>
+          </h1>
+
+          <p class="description">
+            NexGest es la plataforma modular que acompaña tu negocio: se activa según lo que
+            necesitas, no al revés.
+          </p>
+
+          <p class="action">
+            Tu negocio está listo para dar el siguiente paso. Déjanos tu correo y obtén acceso a
+            NexGest.
+          </p>
+
+          <div class="form">
+            <input
+              type="email"
+              placeholder="Tu correo electrónico"
+              [value]="auth.draftEmail()"
+              (input)="onEmail($event)"
+              (keydown.enter)="start()"
+            />
+
+            <button type="button" (click)="start()">Quiero empezar</button>
+          </div>
+
+          <div class="advantages">
+            <span><ng-icon [svg]="icons.shield"></ng-icon> Seguro y confiable </span>
+
+            <span><ng-icon [svg]="icons.zap"></ng-icon> Acceso inmediato </span>
+
+            <span><ng-icon [svg]="icons.grid"></ng-icon> Sin complicaciones </span>
+          </div>
+        </section>
+
+        <section class="module-map">
+          <div class="network-lines"></div>
+
+          <div class="center">N</div>
+
+          <div class="module inventario">Inventario</div>
+
+          <div class="module clientes">Clientes</div>
+
+          <div class="module ventas">Ventas</div>
+
+          <div class="module proveedores">Proveedores</div>
+
+          <div class="module finanzas">Finanzas</div>
+
+          <div class="module intelligence">
+            <span> Descubre NexGest </span>
+
+            <br />
+
+            ◉ Centro de
+            <br />
+            Inteligencia
+          </div>
+        </section>
+      </main>
+
+      <section class="benefits">
+        <div class="benefit-card">
+          <div class="icon"><ng-icon [svg]="icons.grid"></ng-icon></div>
+
+          <h3>Modular y flexible</h3>
+
+          <p>Activa solo lo que necesitas, cuando lo necesitas.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="icon"><ng-icon [svg]="icons.brain"></ng-icon></div>
+
+          <h3>Decisiones inteligentes</h3>
+
+          <p>Convierte tus datos en acciones reales.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="icon"><ng-icon [svg]="icons.phone"></ng-icon></div>
+
+          <h3>Desde cualquier lugar</h3>
+
+          <p>Gestiona tu negocio en todos tus dispositivos.</p>
+        </div>
+
+        <div class="benefit-card">
+          <div class="icon"><ng-icon [svg]="icons.lock"></ng-icon></div>
+
+          <h3>Siempre contigo</h3>
+
+          <p>Tu información segura, siempre.</p>
+        </div>
+      </section>
+    </div>

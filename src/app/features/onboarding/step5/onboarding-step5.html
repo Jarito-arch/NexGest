@@ -1,0 +1,34 @@
+<app-onboarding-layout>
+  <app-step-indicator [currentStep]="5"> </app-step-indicator>
+
+  <app-onboarding-card>
+    <div class="welcome">
+      <div class="welcome-icon">
+        <ng-icon [svg]="partyIcon"></ng-icon>
+      </div>
+
+      <h1>¡Bienvenido a NexGest!</h1>
+
+      <p class="welcome-text">
+        @if (state.businessName()) {
+          <strong>{{ state.businessName() }}</strong> ya tiene su espacio listo.
+        } @else {
+          Tu espacio ya está listo.
+        }
+        Configuramos NexGest según lo que nos contaste.
+      </p>
+
+      @if (state.modules().length) {
+        <div class="chips">
+          @for (m of state.modules(); track m) {
+            <span class="chip">{{ m }}</span>
+          }
+        </div>
+      }
+
+      <app-primary-button type="button" (click)="finish()">
+        Continuar →
+      </app-primary-button>
+    </div>
+  </app-onboarding-card>
+</app-onboarding-layout>

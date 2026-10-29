@@ -1,0 +1,49 @@
+<app-onboarding-layout>
+  <app-step-indicator [currentStep]="1"> </app-step-indicator>
+
+  <app-onboarding-card>
+    <h1>Cuéntanos sobre tu negocio</h1>
+
+    <p class="subtitle">Primero conozcamos lo básico para adaptar NexGest a tu realidad.</p>
+
+    <label> Nombre del negocio * </label>
+
+    <input
+      type="text"
+      placeholder="Nombre de tu negocio"
+      [value]="state.businessName()"
+      (input)="onName($event)"
+    />
+
+    <h3>¿A qué se dedica principalmente?</h3>
+
+    <div class="options">
+      @for (item of businessTypes; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.category() === item.title"
+          (click)="state.category.set(item.title)"
+        >
+        </app-option-card>
+      }
+    </div>
+
+    <h3>¿Cuántas personas trabajan actualmente en el negocio?</h3>
+
+    <div class="options small">
+      @for (item of teamSizes; track item.title) {
+        <app-option-card
+          [icon]="item.icon"
+          [title]="item.title"
+          [selected]="state.teamSize() === item.title"
+          (click)="state.teamSize.set(item.title)"
+        >
+        </app-option-card>
+      }
+    </div>
+
+    <button class="continue-btn" [disabled]="!valid()" (click)="next()">Continuar →</button>
+    <div class="clear"></div>
+  </app-onboarding-card>
+</app-onboarding-layout>
