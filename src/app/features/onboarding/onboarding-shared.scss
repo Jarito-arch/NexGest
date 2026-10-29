@@ -1,0 +1,112 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.page-header p {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #98a2b3;
+}
+
+app-step-indicator {
+  display: block;
+  margin-bottom: 45px;
+}
+
+app-onboarding-card {
+  display: block;
+  margin-bottom: 22px;
+}
+
+h2 {
+  margin: 0 0 20px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.actions {
+  width: 720px;
+  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 25px;
+}
+
+.actions app-primary-button {
+  min-width: 190px;
+}
+
+.back-btn {
+  height: 48px;
+  padding: 0 28px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(-4px);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .grid-3,
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .page-header h1 {
+    font-size: 25px;
+  }
+}

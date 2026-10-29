@@ -80,3 +80,26 @@
 
   box-shadow: 0 4px 10px rgba(21, 156, 135, 0.25);
 }
+
+.logout {
+  height: 38px;
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background-color: white;
+  border: 1px solid #d5e5df;
+  border-radius: 10px;
+
+  color: #20241f;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.logout:hover {
+  background-color: #f3faf7;
+  color: #d94c4c;
+}

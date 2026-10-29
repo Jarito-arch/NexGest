@@ -1,0 +1,30 @@
+import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+
+@Component({
+
+selector:'app-auth-layout',
+
+standalone:true,
+
+imports:[RouterLink],
+
+templateUrl:'./auth-layout.html',
+
+styleUrl:'./auth-layout.scss'
+
+})
+
+
+export class AuthLayoutComponent {
+
+
+@Input() title:string = '';
+
+@Input() highlight:string = '';
+
+@Input() description:string = '';
+
+
+}

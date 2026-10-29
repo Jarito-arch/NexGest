@@ -1,0 +1,51 @@
+<app-auth-layout
+  title="El futuro de tu negocio"
+  highlight="empieza aquí."
+  description="Gestiona, automatiza y toma mejores decisiones con NexGest."
+>
+  <app-auth-card>
+    <form class="login-content" (submit)="submit($event)" novalidate>
+      <div class="badge">✦ Acceso seguro NexGest</div>
+
+      <h1>Bienvenido de nuevo</h1>
+
+      <p>Ingresa a tu espacio inteligente.</p>
+
+      <app-form-field
+        label="Correo electrónico"
+        placeholder="correo@empresa.com"
+        type="email"
+        autocomplete="email"
+        [(value)]="email"
+        [error]="errors().email"
+      >
+      </app-form-field>
+
+      <app-form-field
+        label="Contraseña"
+        placeholder="********"
+        type="password"
+        autocomplete="current-password"
+        [(value)]="password"
+        [error]="errors().password"
+      >
+      </app-form-field>
+
+      @if (serverError()) {
+        <div class="server-error">{{ serverError() }}</div>
+      }
+
+      <div class="forgot">¿Olvidaste tu contraseña?</div>
+
+      <app-primary-button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Ingresando...' : 'Ingresar →' }}
+      </app-primary-button>
+
+      <div class="register">
+        ¿No tienes una cuenta?
+
+        <span routerLink="/signup"> Crear cuenta </span>
+      </div>
+    </form>
+  </app-auth-card>
+</app-auth-layout>

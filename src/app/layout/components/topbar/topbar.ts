@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { Auth } from '../../../core/services/auth';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { LongDatePipe } from '../../../shared/pipes/long-date-pipe';
@@ -14,6 +15,7 @@ import { LongDatePipe } from '../../../shared/pipes/long-date-pipe';
 export class Topbar {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private auth = inject(Auth);
 
   fecha = new Date();
 
@@ -25,6 +27,11 @@ export class Topbar {
     ),
     { initialValue: '' }
   );
+
+  logout() {
+    this.auth.logout();
+    this.router.navigate(['/']);
+  }
 
   private obtenerTitulo(): string {
     let ruta: ActivatedRoute | null = this.route;
