@@ -1,0 +1,13 @@
+<div class="backdrop" (mousedown)="$event.target === $event.currentTarget && cerrar.emit()">
+  <div class="dialog" role="dialog" aria-modal="true" tabindex="-1" [attr.aria-labelledby]="tituloId" [style.max-width.px]="ancho()">
+    <header class="dialog-header">
+      <h2 [id]="tituloId">{{ titulo() }}</h2>
+      <button type="button" class="dialog-close" aria-label="Cerrar" (click)="cerrar.emit()">
+        <i class="bi bi-x-lg" aria-hidden="true"></i>
+      </button>
+    </header>
+    <div class="dialog-body">
+      <ng-content />
+    </div>
+  </div>
+</div>

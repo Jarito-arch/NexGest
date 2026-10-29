@@ -44,20 +44,26 @@
 
     <nav class="ownerModules">
       <span *ngIf="customModules().length">Mis módulos</span>
-      <a *ngFor="let modulo of customModules()" routerLink="/custom-modules" [queryParams]="{ modulo: modulo.id }"
-        [title]="modulo.nombre" [class.paused]="!modulo.activo">
+      <a *ngFor="let modulo of customModules()" [routerLink]="['/custom-modules', modulo.id]" routerLinkActive="active"
+        [title]="modulo.nombre + (modulo.activo ? '' : ' (en pausa)')" [class.paused]="!modulo.activo">
         <i class="bi" [ngClass]="modulo.icono"></i>
         <span>{{ modulo.nombre }}</span>
       </a>
-      <a routerLink="/custom-modules" title="Crear módulo"><i class="bi bi-plus-lg"></i><span>Crear módulo</span></a>
+      <a routerLink="/custom-modules" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Crear módulo"><i class="bi bi-plus-lg"></i><span>Crear módulo</span></a>
     </nav>
 
     <nav class="systemModules">
-      <a routerLink="/centroInteligencia">
-        Centro de Inteligencia
+      <a routerLink="/centroInteligencia" routerLinkActive="active" title="Centro de Inteligencia">
+        <i class="bi bi-stars" aria-hidden="true"></i><span>Centro de Inteligencia</span>
       </a>
-      <a routerLink="/planAccion">
-        Plan de Acción
+      <a routerLink="/planAccion" routerLinkActive="active" title="Plan de Acción">
+        <i class="bi bi-signpost-split" aria-hidden="true"></i><span>Plan de Acción</span>
+      </a>
+      <a routerLink="/equipo" routerLinkActive="active" title="Equipo">
+        <i class="bi bi-people-fill" aria-hidden="true"></i><span>Equipo</span>
+      </a>
+      <a routerLink="/configuracion" routerLinkActive="active" title="Configuración">
+        <i class="bi bi-gear" aria-hidden="true"></i><span>Configuración</span>
       </a>
     </nav>
 

@@ -1,0 +1,56 @@
+<main class="nt-page">
+  <header class="nt-header">
+    <div>
+      <h1>Notificaciones</h1>
+      <p aria-live="polite">
+        @if (servicio.sinLeer() > 0) {
+          Tienes {{ servicio.sinLeer() }} {{ servicio.sinLeer() === 1 ? 'aviso sin leer' : 'avisos sin leer' }}.
+        } @else {
+          Estás al día, no tienes avisos sin leer.
+        }
+      </p>
+    </div>
+    <button type="button" class="btn-ghost" [disabled]="servicio.sinLeer() === 0" (click)="servicio.marcarTodos()">
+      <i class="bi bi-check2-all" aria-hidden="true"></i> Marcar todo como leído
+    </button>
+  </header>
+
+  <div class="tabs" role="group" aria-label="Filtrar avisos">
+    <button type="button" [class.active]="filtro() === 'todas'" [attr.aria-pressed]="filtro() === 'todas'" (click)="filtro.set('todas')">Todas</button>
+    <button type="button" [class.active]="filtro() === 'sin-leer'" [attr.aria-pressed]="filtro() === 'sin-leer'" (click)="filtro.set('sin-leer')">
+      Sin leer @if (servicio.sinLeer() > 0) {<span class="count">{{ servicio.sinLeer() }}</span>}
+    </button>
+  </div>
+
+  @if (visibles().length === 0) {
+    <section class="empty-state">
+      <i class="bi bi-bell-slash" aria-hidden="true"></i>
+      <h2>{{ filtro() === 'sin-leer' ? 'No tienes avisos sin leer' : 'No tienes notificaciones' }}</h2>
+      <p>Cuando haya novedades en tu negocio, las verás aquí.</p>
+    </section>
+  } @else {
+    <ul class="list">
+      @for (a of visibles(); track a.id) {
+        <li class="item" [class.unread]="!a.leido">
+          <span class="item-icon" aria-hidden="true"><i class="bi" [class]="a.icono"></i></span>
+          <div class="item-body">
+            <h2>
+              @if (!a.leido) {<span class="dot" aria-hidden="true"></span><span class="sr-only">Sin leer: </span>}
+              {{ a.titulo }}
+            </h2>
+            <p>{{ a.detalle }}</p>
+            <span class="when">{{ a.cuando }}</span>
+          </div>
+          <div class="item-actions">
+            @if (a.ruta) {
+              <a class="btn-link" [routerLink]="a.ruta" (click)="servicio.marcarLeido(a.id)">Ver</a>
+            }
+            @if (!a.leido) {
+              <button type="button" class="btn-link" (click)="servicio.marcarLeido(a.id)">Marcar como leído</button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</main>

@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Auth } from '../../../core/services/auth';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { LongDatePipe } from '../../../shared/pipes/long-date-pipe';
+import { Notificaciones } from '../../../core/services/notificaciones';
 
 
 @Component({
@@ -15,7 +16,12 @@ import { LongDatePipe } from '../../../shared/pipes/long-date-pipe';
 export class Topbar {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
-  private auth = inject(Auth);
+  readonly auth = inject(Auth);
+  readonly avisos = inject(Notificaciones);
+
+  /** Estado del menú lateral en móvil y evento para abrirlo/cerrarlo. */
+  menuAbierto = input(false);
+  menu = output<void>();
 
   fecha = new Date();
 

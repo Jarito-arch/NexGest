@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { CustomModule, Tenant } from '../../core/services/tenant';
 
 type FieldType = 'Texto' | 'Número' | 'Moneda' | 'Fecha' | 'Hora' | 'Booleano' | 'Selección' | 'Archivo' | 'Relación';
@@ -9,16 +10,18 @@ interface ModuleField {
   id: number;
   nombre: string;
   tipo: FieldType;
+  opciones?: string[];
 }
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   selector: 'app-custom-modules',
-  styleUrl: './custom-modules.css',
+  styleUrls: ['./custom-modules.css', './custom-modules-steps.css'],
   templateUrl: './custom-modules.html',
 })
 export class CustomModules {
   private readonly tenant = inject(Tenant);
+  private readonly router = inject(Router);
   readonly pasos = ['Nombre', 'Campos', 'Relaciones', 'Vista previa', 'Crear'];
   readonly titulos = [
     'Define tu módulo',
@@ -43,6 +46,7 @@ export class CustomModules {
   paso = 0;
   nuevoCampo = '';
   tipoNuevoCampo: FieldType = 'Texto';
+  opcionesNuevoCampo = '';
   relacion = '';
   moduloCreado: CustomModule | null = null;
   campos: ModuleField[] = [
@@ -55,8 +59,17 @@ export class CustomModules {
   }
   get iconoModulo(): string { return this.categoria === 'Comercial' ? 'bi-briefcase' : this.categoria === 'Administración' ? 'bi-clipboard-data' : 'bi-grid'; }
 
+  /** Las opciones de un campo de tipo Selección se escriben separadas por coma. */
+  get opcionesDelCampo(): string[] {
+    return this.opcionesNuevoCampo.split(',').map(opcion => opcion.trim()).filter(Boolean);
+  }
+  get puedeAgregarCampo(): boolean {
+    return !!this.nuevoCampo.trim() && (this.tipoNuevoCampo !== 'Selección' || this.opcionesDelCampo.length > 0);
+  }
+
   continuar(): void {
     if (this.paso === 0 && !this.nombre.trim()) return;
+    if (this.paso === 1 && this.campos.length === 0) return;
     this.paso = Math.min(this.paso + 1, this.pasos.length - 1);
   }
 
@@ -70,9 +83,11 @@ export class CustomModules {
 
   agregarCampo(): void {
     const nombre = this.nuevoCampo.trim();
-    if (!nombre) return;
-    this.campos = [...this.campos, { id: Date.now(), nombre, tipo: this.tipoNuevoCampo }];
+    if (!this.puedeAgregarCampo) return;
+    const opciones = this.tipoNuevoCampo === 'Selección' ? [...new Set(this.opcionesDelCampo)] : undefined;
+    this.campos = [...this.campos, { id: Date.now() + this.campos.length, nombre, tipo: this.tipoNuevoCampo, opciones }];
     this.nuevoCampo = '';
+    this.opcionesNuevoCampo = '';
   }
 
   quitarCampo(index: number): void {
@@ -96,9 +111,14 @@ export class CustomModules {
       categoria: this.categoria,
       icono: this.iconoModulo,
       activo: true,
-      campos: this.campos.map(({ nombre: campoNombre, tipo }) => ({ nombre: campoNombre, tipo })),
+      campos: this.campos.map(({ id, nombre: campoNombre, tipo, opciones }) => ({ id: `f${id}`, nombre: campoNombre, tipo, ...(opciones ? { opciones } : {}) })),
+      relacion: this.relacion || undefined,
     });
     this.moduloCreado = creado;
+  }
+
+  abrirModulo(): void {
+    if (this.moduloCreado) this.router.navigate(['/custom-modules', this.moduloCreado.id]);
   }
 
   alternar(modulo: CustomModule): void {
@@ -111,6 +131,7 @@ export class CustomModules {
     this.categoria = 'Operaciones';
     this.relacion = '';
     this.campos = [{ id: Date.now(), nombre: 'Nombre', tipo: 'Texto' }];
+    this.opcionesNuevoCampo = '';
     this.paso = 0;
     this.moduloCreado = null;
   }

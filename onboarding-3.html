@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXGEST — Configuración inicial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   NEXGEST — Onboarding
+   Reutiliza tokens y componentes de nexgest-finanzas.html
+   (mismos colores, tipografías, cards, botones, inputs).
+   ========================================================= */
+
+:root{
+  --bg: #F6F4F1;
+  --surface: #FFFFFF;
+  --surface-2: #FBF9F6;
+  --border: #E9E5DE;
+  --text: #1B1A17;
+  --text-soft: #6B6862;
+  --text-faint: #9B968D;
+  --sidebar: #1F221F;
+  --sidebar-text: #C9CBC5;
+  --sidebar-text-dim: #82857D;
+  --accent: #12786A;
+  --accent-soft: #E4F0EC;
+  --accent-strong: #0B5A4F;
+  --success: #1E8A5F;
+  --success-soft: #E3F1E8;
+  --warn: #B7791F;
+  --warn-soft: #FBF0DD;
+  --risk: #C0453A;
+  --risk-soft: #FBE7E4;
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:
+    radial-gradient(900px 640px at 50% 32%, rgba(63,220,184,0.16), transparent 62%),
+    radial-gradient(700px 560px at 86% 4%, rgba(31,190,159,0.10), transparent 58%),
+    radial-gradient(700px 560px at 8% 94%, rgba(18,120,106,0.10), transparent 60%),
+    #0B0D0D;
+  background-attachment: fixed;
+  color: #EDEEEA;
+  font-family: 'Inter', sans-serif;
+  font-weight:500;
+  -webkit-font-smoothing: antialiased;
+  min-height:100vh;
+  position:relative;
+}
+body::before{
+  content:'';
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 26px 26px;
+  -webkit-mask-image: radial-gradient(1400px 900px at 50% 28%, #000 0%, transparent 72%);
+  mask-image: radial-gradient(1400px 900px at 50% 28%, #000 0%, transparent 72%);
+}
+.mono{ font-family:'IBM Plex Mono', monospace; }
+.display{ font-family:'Space Grotesk', sans-serif; }
+
+/* CARD SURFACE (idéntico a .card de Finanzas; texto oscuro fijo dentro de la tarjeta,
+   independiente del fondo oscuro de la página que la rodea) */
+.card{
+  position:relative; background: var(--surface); overflow:hidden; color: var(--text);
+  border:1px solid var(--border); border-radius: var(--radius-md);
+  box-shadow: 0 1px 1px rgba(255,255,255,0.9) inset, 0 1px 2px rgba(27,26,23,0.04), 0 10px 28px rgba(27,26,23,0.06), 0 0 0 1px rgba(255,255,255,0.02);
+}
+.card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:52%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 100%); pointer-events:none;
+}
+.card::after{
+  content:''; position:absolute; top:-60%; left:-10%; width:55%; height:110%;
+  background: radial-gradient(closest-side, rgba(255,255,255,0.55), rgba(255,255,255,0) 70%);
+  transform: rotate(8deg); pointer-events:none;
+}
+.card > *{ position:relative; z-index:1; }
+
+/* chips (idéntico a Finanzas) */
+.chip{ font-size:11.5px; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 0 rgba(255,255,255,0.9) inset; }
+.chip.success{ background:linear-gradient(180deg,#F0FBF4,var(--success-soft)); color:var(--success); }
+.chip.accent{ background:linear-gradient(180deg,#F3FAF7,var(--accent-soft)); color:var(--accent-strong); }
+
+/* type-grid / type-option (idéntico a Finanzas, base de las tarjetas seleccionables) */
+.type-option{ position:relative; border:1px solid var(--border); border-radius:10px; padding:14px 12px; text-align:center; cursor:pointer; background: linear-gradient(180deg,#FFFFFF,#FBFAF7); box-shadow: 0 1px 0 rgba(255,255,255,1) inset, 0 2px 5px rgba(27,26,23,0.03); transition: border-color .15s ease, box-shadow .15s ease, background .15s ease; }
+.type-option:hover{ border-color:#D8D2C6; }
+.type-option.selected{ border-color:var(--accent); background:linear-gradient(180deg,#F3FAF7,var(--accent-soft)); box-shadow:0 1px 0 rgba(255,255,255,0.9) inset, 0 4px 10px rgba(18,120,106,0.18); }
+.type-icon{ width:22px; height:22px; margin:0 auto 8px auto; color:var(--text-soft); }
+.type-option.selected .type-icon{ color:var(--accent-strong); }
+.type-label{ font-size:12.5px; font-weight:700; }
+
+/* Stepper de progreso (idéntico a Finanzas) */
+.stepper{ display:flex; align-items:center; gap:0; }
+.step{ display:flex; align-items:center; gap:8px; }
+.step-num{ width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11.5px; font-weight:700; font-family:'Space Grotesk'; flex-shrink:0; }
+.step.done .step-num{ background:linear-gradient(155deg,#3FDCB8,#1FBE9F 35%,var(--accent) 70%); color:#fff; box-shadow:0 1px 0 rgba(255,255,255,0.55) inset, 0 3px 8px rgba(11,90,79,0.4); }
+.step.current .step-num{ background: linear-gradient(180deg,#FFFFFF,#F8F6F2); border:2px solid var(--accent); color:var(--accent-strong); box-shadow: 0 2px 6px rgba(18,120,106,0.25); }
+.step.todo .step-num{ background:var(--surface-2); border:1px solid var(--border); color:var(--text-faint); }
+.step-label{ font-size:12.5px; font-weight:600; color:#767C72; white-space:nowrap; }
+.step.current .step-label{ color:#EDEEEA; font-weight:700; }
+.step.done .step-label{ color:#ACB1A9; }
+.step-line{ width:32px; height:1.5px; background:var(--border); margin:0 8px; flex-shrink:0; }
+.step-line.done{ background: linear-gradient(90deg,var(--accent),#3FDCB8); }
+
+/* Inputs / labels (idéntico a Finanzas) */
+.fin-lbl{ display:block; font-size:12.5px; font-weight:700; color:var(--text-soft); margin:0 0 6px 0; }
+.fin-input, .fin-select{ font:inherit; font-size:13.5px; font-weight:600; color:var(--text); background:linear-gradient(180deg,#FFFFFF,#FBFAF7); border:1px solid var(--border); border-radius:10px; padding:11px 13px; box-shadow:0 1px 0 #fff inset, 0 2px 6px rgba(27,26,23,0.04); width:100%; }
+.fin-input:focus, .fin-select:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(18,120,106,0.14); outline:none; }
+.fin-btn{ font:inherit; font-size:13.5px; font-weight:700; color:#fff; border:none; cursor:pointer; padding:11px 20px; border-radius:10px; background:linear-gradient(155deg,#1FBE9F 0%,var(--accent) 55%,#0B5A4F 100%); box-shadow:0 1px 0 rgba(255,255,255,0.45) inset, 0 6px 16px rgba(11,90,79,0.35); white-space:nowrap; display:inline-flex; align-items:center; gap:6px; }
+.fin-btn:hover{ filter:brightness(1.06); }
+.fin-btn:disabled{ opacity:0.45; cursor:not-allowed; filter:none; }
+.fin-btn.ghost{ color:var(--text-soft); background:linear-gradient(180deg,#FFFFFF,#F5F3EE); border:1px solid var(--border); box-shadow:0 1px 0 #fff inset, 0 2px 6px rgba(27,26,23,0.05); }
+.fin-btn:focus-visible, .fin-input:focus-visible, .type-option:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+/* =========================================================
+   Layout específico del onboarding (sin Sidebar/TopBar:
+   el negocio aún no existe en el sistema)
+   ========================================================= */
+.onb-page{ min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:36px 20px 60px; position:relative; z-index:1; }
+.onb-brand{ display:flex; align-items:center; gap:10px; margin-bottom:30px; }
+.onb-logo-mark{ width:30px; height:30px; border-radius:8px; background: linear-gradient(155deg,#3FDCB8 0%,#1FBE9F 35%, var(--accent) 65%, #0B5A4F 100%); box-shadow:0 1px 0 rgba(255,255,255,0.7) inset, 0 -2px 4px rgba(0,0,0,0.18) inset, 0 6px 16px rgba(11,90,79,0.6), 0 0 24px rgba(63,220,184,0.4); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk'; font-weight:700; font-size:15px; color:#fff; }
+.onb-brand-text{ font-family:'Space Grotesk'; font-weight:700; font-size:17px; letter-spacing:0.2px; }
+
+.onb-stepper-wrap{ width:100%; max-width:900px; margin-bottom:34px; overflow-x:auto; }
+.onb-stepper-wrap .stepper{ justify-content:center; min-width:640px; }
+
+.onb-container{ width:100%; max-width:640px; }
+.onb-head{ text-align:center; margin-bottom:28px; }
+.onb-title{ font-family:'Space Grotesk'; font-size:26px; font-weight:700; letter-spacing:-0.01em; margin-bottom:8px; }
+.onb-sub{ font-size:13.5px; color:#ACB1A9; font-weight:600; line-height:1.5; max-width:460px; margin:0 auto; }
+
+.onb-card{ padding:28px 30px 30px; margin-bottom:22px; }
+.onb-card + .onb-card{ margin-top:-6px; }
+.onb-field{ margin-bottom:22px; }
+.onb-field:last-child{ margin-bottom:0; }
+.onb-field-note{ font-size:12px; color:var(--text-faint); font-weight:600; margin-top:8px; }
+
+.onb-grid{ display:grid; gap:10px; }
+.onb-grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+.onb-grid.cols-4{ grid-template-columns:repeat(4,1fr); }
+.onb-grid.cols-5{ grid-template-columns:repeat(5,1fr); }
+.onb-grid.cols-2{ grid-template-columns:repeat(2,1fr); }
+
+.onb-pill-row{ display:flex; gap:10px; flex-wrap:wrap; }
+.onb-pill-row .type-option{ flex:1; min-width:96px; padding:12px 10px; }
+
+.onb-check-list{ display:flex; align-items:center; gap:10px; }
+.onb-check-mark{ width:18px; height:18px; border-radius:6px; border:1.5px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#fff; transition: background .15s ease, border-color .15s ease; }
+.type-option.selected .onb-check-mark{ background:var(--accent); border-color:var(--accent); }
+.onb-check-mark svg{ width:11px; height:11px; color:#fff; opacity:0; transition:opacity .1s ease; }
+.type-option.selected .onb-check-mark svg{ opacity:1; }
+.onb-check-list .type-label{ text-align:left; flex:1; }
+
+.onb-module-card{ padding:18px 18px 16px; display:flex; gap:14px; align-items:flex-start; text-align:left; cursor:pointer; }
+.onb-module-icon{ width:38px; height:38px; border-radius:10px; background:linear-gradient(180deg,#F0FBF6,var(--accent-soft)); color:var(--accent-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 0 rgba(255,255,255,0.8) inset; }
+.onb-module-icon svg{ width:19px; height:19px; }
+.onb-module-body{ flex:1; }
+.onb-module-name{ font-size:14.5px; font-weight:700; margin-bottom:3px; }
+.onb-module-desc{ font-size:12.5px; color:var(--text-soft); font-weight:600; line-height:1.45; }
+.onb-module-row{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+.onb-module-card.selected .onb-check-mark{ background:var(--accent); border-color:var(--accent); }
+
+.onb-suggest-note{ display:flex; align-items:center; gap:8px; font-size:13px; color:var(--accent-strong); font-weight:700; background:linear-gradient(180deg,#F3FAF7,var(--accent-soft)); border:1px solid rgba(18,120,106,0.18); border-radius:10px; padding:10px 14px; margin-bottom:18px; }
+
+.onb-counter{ text-align:center; font-size:12.5px; font-weight:700; color:#ACB1A9; margin-bottom:16px; }
+.onb-counter b{ color:#3FDCB8; }
+
+.onb-nav{ display:flex; align-items:center; justify-content:space-between; width:100%; max-width:640px; margin-top:6px; }
+.onb-nav .spacer{ flex:1; }
+
+.onb-summary-section{ margin-bottom:22px; }
+.onb-summary-section:last-child{ margin-bottom:0; }
+.onb-summary-title{ font-family:'Space Grotesk'; font-size:14px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+.onb-summary-title .edit-link{ font-family:'Inter'; font-size:12px; font-weight:700; color:var(--accent); cursor:pointer; }
+.onb-summary-row{ display:flex; justify-content:space-between; padding:9px 0; border-top:1px solid var(--border); font-size:13.5px; font-weight:600; }
+.onb-summary-row:first-of-type{ border-top:none; padding-top:0; }
+.onb-summary-row span:last-child{ font-weight:700; }
+.onb-chip-wrap{ display:flex; flex-wrap:wrap; gap:8px; }
+.onb-final-btn-wrap{ text-align:center; margin-top:26px; }
+.onb-final-btn-wrap .fin-btn{ padding:13px 26px; font-size:14px; }
+
+@media (max-width:640px){
+  .onb-grid.cols-3, .onb-grid.cols-4, .onb-grid.cols-5{ grid-template-columns:repeat(2,1fr); }
+  .onb-card{ padding:22px 18px 24px; }
+  .onb-stepper-wrap .stepper{ min-width:560px; }
+}
+
+</style>
+</head>
+<body>
+  <div class="onb-page">
+
+    <div class="onb-brand">
+      <div class="onb-logo-mark">N</div>
+      <div class="onb-brand-text">NEXGEST</div>
+    </div>
+
+    <div class="onb-stepper-wrap">
+      <div class="stepper">
+        <div class="step" data-step="1"><div class="step-num">01</div><div class="step-label">Tu negocio</div></div>
+        <div class="step-line" data-after-step="1"></div>
+        <div class="step" data-step="2"><div class="step-num">02</div><div class="step-label">Cómo trabajas</div></div>
+        <div class="step-line" data-after-step="2"></div>
+        <div class="step" data-step="3"><div class="step-num">03</div><div class="step-label">Módulos</div></div>
+        <div class="step-line" data-after-step="3"></div>
+        <div class="step" data-step="4"><div class="step-num">04</div><div class="step-label">Objetivos</div></div>
+        <div class="step-line" data-after-step="4"></div>
+        <div class="step" data-step="5"><div class="step-num">05</div><div class="step-label">Configuración</div></div>
+      </div>
+    </div>
+
+    <div class="onb-container">
+      <div class="onb-head">
+        <div class="onb-title display">¿Qué quieres gestionar?</div>
+        <div class="onb-sub">Selecciona las áreas que quieres controlar con NexGest.</div>
+      </div>
+
+      <div class="onb-suggest-note" id="suggestNote" hidden>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5L12 2z"/></svg>
+        Según lo que nos contaste, creemos que estos módulos pueden ayudarte.
+      </div>
+
+      <div class="onb-grid cols-1" id="gModules" data-select="multi" style="grid-template-columns:1fr;">
+        <div class="card onb-module-card" data-value="ventas">
+          <div class="onb-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 17l5-6 4 4 8-9"/><path d="M15 6h5v5"/></svg></div>
+          <div class="onb-module-body">
+            <div class="onb-module-name">Ventas</div>
+            <div class="onb-module-desc">Registra y analiza las ventas de tu negocio.</div>
+            <div class="onb-module-row"><span class="chip accent suggest-chip" hidden>Sugerido</span></div>
+          </div>
+          <div class="onb-check-mark" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        </div>
+        <div class="card onb-module-card" data-value="inventario">
+          <div class="onb-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg></div>
+          <div class="onb-module-body">
+            <div class="onb-module-name">Inventario</div>
+            <div class="onb-module-desc">Controla productos, stock y movimientos.</div>
+            <div class="onb-module-row"><span class="chip accent suggest-chip" hidden>Sugerido</span></div>
+          </div>
+          <div class="onb-check-mark" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        </div>
+        <div class="card onb-module-card" data-value="clientes">
+          <div class="onb-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 2.9-6 6.5-6s6.5 2.5 6.5 6"/><path d="M17 8.5a3 3 0 110-5.8"/><path d="M21.5 19.5c0-2.8-2-5-4.8-5.7"/></svg></div>
+          <div class="onb-module-body">
+            <div class="onb-module-name">Clientes</div>
+            <div class="onb-module-desc">Organiza y analiza la información de tus clientes.</div>
+            <div class="onb-module-row"><span class="chip accent suggest-chip" hidden>Sugerido</span></div>
+          </div>
+          <div class="onb-check-mark" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        </div>
+        <div class="card onb-module-card" data-value="proveedores">
+          <div class="onb-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l2-6h14l2 6"/><path d="M3 9v11h18V9"/><path d="M9 20v-6h6v6"/></svg></div>
+          <div class="onb-module-body">
+            <div class="onb-module-name">Proveedores</div>
+            <div class="onb-module-desc">Gestiona la información de tus proveedores.</div>
+            <div class="onb-module-row"><span class="chip accent suggest-chip" hidden>Sugerido</span></div>
+          </div>
+          <div class="onb-check-mark" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        </div>
+        <div class="card onb-module-card" data-value="finanzas">
+          <div class="onb-module-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10h18M7 15h2M3 6h18v12H3z"/></svg></div>
+          <div class="onb-module-body">
+            <div class="onb-module-name">Finanzas</div>
+            <div class="onb-module-desc">Controla tus ingresos, gastos y balance.</div>
+            <div class="onb-module-row"><span class="chip accent suggest-chip" hidden>Sugerido</span></div>
+          </div>
+          <div class="onb-check-mark" style="margin-top:2px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="onb-nav">
+      <button class="fin-btn ghost" id="btnBack" type="button">← Atrás</button>
+      <button class="fin-btn" id="btnNext" type="button">Continuar →</button>
+    </div>
+  </div>
+
+<script>
+/* =========================================================
+   NEXGEST — Onboarding: estado compartido entre páginas
+   (preparado para conectarse luego a `bussiness` /
+   `business_module`; por ahora vive en el frontend).
+   ========================================================= */
+(function(){
+  const KEY = 'nexgestOnboardingState';
+
+  const DEFAULT_STATE = {
+    business: { name:'', type:'', teamSize:'' },
+    activities: [],
+    frequency: '',
+    modules: [],
+    goals: []
+  };
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(KEY);
+      if(!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      const parsed = JSON.parse(raw);
+      return Object.assign(JSON.parse(JSON.stringify(DEFAULT_STATE)), parsed);
+    }catch(e){
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+  }
+
+  function saveState(patch){
+    const current = loadState();
+    const next = Object.assign(current, patch);
+    localStorage.setItem(KEY, JSON.stringify(next));
+    return next;
+  }
+
+  function goTo(page){ window.location.href = page; }
+
+  /* ---- tarjetas seleccionables (.type-option / .onb-module-card) ---- */
+  /* data-select="single" | "multi"  ·  data-max (opcional, solo multi) */
+  function initChoiceGroup(container){
+    const mode = container.dataset.select || 'single';
+    const max = parseInt(container.dataset.max || '0', 10);
+    const cards = Array.from(container.querySelectorAll('[data-value]'));
+
+    cards.forEach(card=>{
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('role', mode === 'multi' ? 'checkbox' : 'radio');
+      const sync = ()=>card.setAttribute('aria-checked', card.classList.contains('selected') ? 'true' : 'false');
+      sync();
+
+      const toggle = ()=>{
+        if(mode === 'single'){
+          cards.forEach(c=>c.classList.remove('selected'));
+          card.classList.add('selected');
+        }else{
+          const selectedCount = cards.filter(c=>c.classList.contains('selected')).length;
+          if(!card.classList.contains('selected') && max > 0 && selectedCount >= max) return;
+          card.classList.toggle('selected');
+        }
+        cards.forEach(sync);
+        container.dispatchEvent(new CustomEvent('choicechange'));
+      };
+
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', e=>{
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  function getSelectedValues(container){
+    return Array.from(container.querySelectorAll('[data-value].selected')).map(c=>c.dataset.value);
+  }
+
+  function setSelectedValues(container, values){
+    const set = new Set(values || []);
+    container.querySelectorAll('[data-value]').forEach(c=>{
+      c.classList.toggle('selected', set.has(c.dataset.value));
+      c.setAttribute('aria-checked', c.classList.contains('selected') ? 'true' : 'false');
+    });
+  }
+
+  /* ---- stepper: marca los pasos completados/actual/pendientes ---- */
+  function initStepper(currentStep){
+    document.querySelectorAll('.stepper .step').forEach(step=>{
+      const n = parseInt(step.dataset.step, 10);
+      step.classList.remove('done','current','todo');
+      if(n < currentStep) step.classList.add('done');
+      else if(n === currentStep) step.classList.add('current');
+      else step.classList.add('todo');
+    });
+    document.querySelectorAll('.stepper .step-line').forEach(line=>{
+      const n = parseInt(line.dataset.afterStep, 10);
+      line.classList.toggle('done', n < currentStep);
+    });
+  }
+
+  window.NexOnboarding = { loadState, saveState, goTo, initChoiceGroup, getSelectedValues, setSelectedValues, initStepper };
+})();
+
+</script>
+<script>
+  const NX = window.NexOnboarding;
+  NX.initStepper(3);
+
+  const modulesGroup = document.getElementById('gModules');
+  NX.initChoiceGroup(modulesGroup);
+
+  const state = NX.loadState();
+
+  /* Mapa de sugerencia: actividad de la página 2 → módulo */
+  const SUGGEST_MAP = {
+    vende: 'ventas',
+    inventario: 'inventario',
+    clientes: 'clientes',
+    compra: 'proveedores',
+    finanzas: 'finanzas'
+  };
+  const suggested = Array.from(new Set((state.activities || []).map(a=>SUGGEST_MAP[a]).filter(Boolean)));
+
+  if(suggested.length){
+    document.getElementById('suggestNote').hidden = false;
+    suggested.forEach(mod=>{
+      const card = modulesGroup.querySelector('[data-value="'+mod+'"]');
+      if(card) card.querySelector('.suggest-chip').hidden = false;
+    });
+  }
+
+  /* Preselección: lo ya guardado tiene prioridad; si es la primera vez, usar sugerencias */
+  const preselect = (state.modules && state.modules.length) ? state.modules : suggested;
+  NX.setSelectedValues(modulesGroup, preselect);
+
+  document.getElementById('btnBack').addEventListener('click', ()=>NX.goTo('onboarding-2.html'));
+  document.getElementById('btnNext').addEventListener('click', ()=>{
+    const modules = NX.getSelectedValues(modulesGroup);
+    NX.saveState({ modules });
+    NX.goTo('onboarding-4.html');
+  });
+</script>
+</body>
+</html>

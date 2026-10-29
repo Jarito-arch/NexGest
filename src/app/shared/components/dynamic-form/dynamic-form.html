@@ -1,1 +1,90 @@
-<p>dynamic-form works!</p>
+<form class="df" novalidate (submit)="enviar($event)">
+  @for (campo of campos(); track campo.key) {
+    <div class="df-field">
+      @if (campo.tipo === 'Booleano') {
+        <label class="df-switch" [for]="idDe(campo)">
+          <input type="checkbox" [id]="idDe(campo)" [checked]="!!datos()[campo.key]" (change)="ponerBooleano(campo.key, $event)" />
+          <span class="df-switch-track" aria-hidden="true"></span>
+          <span>{{ campo.label }}: <strong>{{ datos()[campo.key] ? 'Sí' : 'No' }}</strong></span>
+        </label>
+      } @else {
+        <label class="df-label" [for]="idDe(campo)">
+          {{ campo.label }}@if (campo.requerido) {<span class="df-req" aria-hidden="true"> *</span>}
+        </label>
+
+        @switch (campo.tipo) {
+          @case ('Número') {
+            <input class="df-control" type="number" step="any" [id]="idDe(campo)" [value]="datos()[campo.key]"
+              [attr.aria-invalid]="errores()[campo.key] ? true : null" [attr.aria-describedby]="errores()[campo.key] ? idDe(campo) + '-error' : null"
+              (input)="ponerNumero(campo.key, $event)" />
+          }
+          @case ('Moneda') {
+            <div class="df-money">
+              <span aria-hidden="true">S/</span>
+              <input class="df-control" type="number" step="0.01" min="0" inputmode="decimal" [id]="idDe(campo)" [value]="datos()[campo.key]"
+                [attr.aria-invalid]="errores()[campo.key] ? true : null" [attr.aria-describedby]="errores()[campo.key] ? idDe(campo) + '-error' : null"
+                (input)="ponerNumero(campo.key, $event)" />
+            </div>
+          }
+          @case ('Fecha') {
+            <input class="df-control" type="date" [id]="idDe(campo)" [value]="datos()[campo.key]" (input)="ponerTexto(campo.key, $event)" />
+          }
+          @case ('Hora') {
+            <input class="df-control" type="time" [id]="idDe(campo)" [value]="datos()[campo.key]" (input)="ponerTexto(campo.key, $event)" />
+          }
+          @case ('Selección') {
+            @if (campo.opciones?.length) {
+              <select class="df-control" [id]="idDe(campo)" [value]="datos()[campo.key]" [attr.aria-invalid]="errores()[campo.key] ? true : null"
+                [attr.aria-describedby]="errores()[campo.key] ? idDe(campo) + '-error' : null" (change)="ponerTexto(campo.key, $event)">
+                <option value="">Elige una opción</option>
+                @for (opcion of campo.opciones; track opcion) {
+                  <option [value]="opcion" [selected]="datos()[campo.key] === opcion">{{ opcion }}</option>
+                }
+              </select>
+            } @else {
+              <input class="df-control" type="text" maxlength="120" [id]="idDe(campo)" [value]="datos()[campo.key]" (input)="ponerTexto(campo.key, $event)" />
+            }
+          }
+          @case ('Relación') {
+            @if (campo.opciones?.length) {
+              <select class="df-control" [id]="idDe(campo)" [value]="datos()[campo.key]" (change)="ponerTexto(campo.key, $event)">
+                <option value="">Sin relación</option>
+                @for (opcion of campo.opciones; track opcion) {
+                  <option [value]="opcion" [selected]="datos()[campo.key] === opcion">{{ opcion }}</option>
+                }
+              </select>
+            } @else {
+              <input class="df-control" type="text" maxlength="120" placeholder="Nombre del registro relacionado" [id]="idDe(campo)"
+                [value]="datos()[campo.key]" (input)="ponerTexto(campo.key, $event)" />
+            }
+          }
+          @case ('Archivo') {
+            <input class="df-control df-file" type="file" [id]="idDe(campo)" (change)="ponerArchivo(campo.key, $event)" />
+            @if (datos()[campo.key]) {
+              <span class="df-hint">
+                <i class="bi bi-paperclip" aria-hidden="true"></i> {{ datos()[campo.key] }}
+                <button type="button" class="df-link" (click)="quitarArchivo(campo.key)">Quitar</button>
+              </span>
+            } @else {
+              <span class="df-hint">Por ahora solo se guarda el nombre del archivo.</span>
+            }
+          }
+          @default {
+            <input class="df-control" type="text" maxlength="200" autocomplete="off" [id]="idDe(campo)" [value]="datos()[campo.key]"
+              [attr.aria-invalid]="errores()[campo.key] ? true : null" [attr.aria-describedby]="errores()[campo.key] ? idDe(campo) + '-error' : null"
+              (input)="ponerTexto(campo.key, $event)" />
+          }
+        }
+      }
+
+      @if (errores()[campo.key]; as mensaje) {
+        <span class="df-error" role="alert" [id]="idDe(campo) + '-error'">{{ mensaje }}</span>
+      }
+    </div>
+  }
+
+  <div class="df-actions">
+    <button type="button" class="df-btn" (click)="cancelar.emit()">Cancelar</button>
+    <button type="submit" class="df-btn df-btn-primary">{{ etiquetaGuardar() }}</button>
+  </div>
+</form>

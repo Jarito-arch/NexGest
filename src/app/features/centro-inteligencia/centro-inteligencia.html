@@ -1,0 +1,117 @@
+<main class="ci-page">
+  <header class="ci-header">
+    <div>
+      <h1>Centro de Inteligencia</h1>
+      <p>Entiende cómo va tu negocio y qué conviene hacer ahora. Los datos son de ejemplo.</p>
+    </div>
+    <div class="period" role="group" aria-label="Período de análisis">
+      @for (p of periodos; track p.valor) {
+        <button type="button" [class.active]="periodo() === p.valor" [attr.aria-pressed]="periodo() === p.valor" (click)="elegir(p.valor)">
+          {{ p.etiqueta }}
+        </button>
+      }
+    </div>
+  </header>
+
+  @if (error()) {
+    <section class="state-card" role="alert">
+      <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
+      <h2>No pudimos cargar el análisis</h2>
+      <p>Revisa tu conexión e inténtalo de nuevo.</p>
+      <button type="button" class="btn-primary" (click)="cargar()">Reintentar</button>
+    </section>
+  } @else if (cargando() && !datos()) {
+    <div class="skeleton-grid" role="status" aria-label="Cargando análisis">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="skeleton kpi-skel"></div>
+      }
+      <div class="skeleton wide-skel"></div>
+      <div class="skeleton wide-skel"></div>
+    </div>
+  } @else if (datos(); as d) {
+    <div class="content" [class.refreshing]="cargando()" [attr.aria-busy]="cargando()">
+      <section class="kpis" aria-label="Indicadores principales">
+        @for (k of d.indicadores; track k.id) {
+          <article class="kpi">
+            <div class="kpi-top">
+              <span class="kpi-icon" aria-hidden="true"><i class="bi" [class]="k.icono"></i></span>
+              <span class="kpi-title">{{ k.titulo }}</span>
+            </div>
+            <strong class="kpi-value">{{ k.valor }}</strong>
+            <span class="kpi-var" [class]="'kpi-var ' + clase(k.variacion, k.altoEsBueno)">
+              <i class="bi" [class]="k.variacion > 0 ? 'bi-arrow-up-right' : k.variacion < 0 ? 'bi-arrow-down-right' : 'bi-dash'" aria-hidden="true"></i>
+              {{ texto(k.variacion, k.unidad) }} <small>vs. período anterior</small>
+            </span>
+            <span class="kpi-detail">{{ k.detalle }}</span>
+          </article>
+        }
+      </section>
+
+      <div class="charts">
+        <section class="card">
+          <div class="card-head">
+            <h2>Tendencia de ventas</h2>
+            <span class="legend">
+              <span><i class="dot dot-main"></i> Actual</span>
+              <span><i class="dot dot-prev"></i> Período anterior</span>
+            </span>
+          </div>
+          @if (grafico(); as g) {
+            <svg class="trend" [attr.viewBox]="'0 0 ' + ancho + ' ' + alto" role="img"
+              [attr.aria-label]="'Gráfico de tendencia de ventas de los últimos ' + d.periodo + ' días'">
+              @for (l of g.lineas; track l.y) {
+                <line [attr.x1]="56" [attr.x2]="ancho - 16" [attr.y1]="l.y" [attr.y2]="l.y" class="grid" />
+                <text [attr.x]="48" [attr.y]="l.y + 4" text-anchor="end" class="axis">{{ l.etiqueta }}</text>
+              }
+              <path [attr.d]="g.area" class="area" />
+              <path [attr.d]="g.anterior" class="line-prev" />
+              <path [attr.d]="g.actual" class="line-main" />
+              @for (p of g.puntos; track p.etiqueta + p.x) {
+                <circle [attr.cx]="p.x" [attr.cy]="p.y" r="4" class="point">
+                  <title>{{ p.etiqueta }}: {{ soles(p.valor) }}</title>
+                </circle>
+                <text [attr.x]="p.x" [attr.y]="g.base" text-anchor="middle" class="axis">{{ p.etiqueta }}</text>
+              }
+            </svg>
+          }
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Ventas por categoría</h2></div>
+          <ul class="bars">
+            @for (c of d.categorias; track c.categoria) {
+              <li>
+                <span class="bar-label">{{ c.categoria }}</span>
+                <span class="bar-track" aria-hidden="true"><span class="bar-fill" [style.width.%]="(c.valor / maximoCategoria()) * 100"></span></span>
+                <span class="bar-value">{{ soles(c.valor) }}</span>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+
+      <section aria-labelledby="reco-titulo">
+        <div class="card-head reco-head">
+          <h2 id="reco-titulo">Recomendaciones para ti</h2>
+          <span class="reco-sub">Priorizadas según lo que nos contaste al empezar</span>
+        </div>
+        <div class="recos">
+          @for (r of d.recomendaciones; track r.id) {
+            <article class="reco">
+              <div class="reco-top">
+                <span class="badge" [class]="'badge badge-' + r.prioridad.toLowerCase()">{{ r.prioridad }}</span>
+                @if (r.motivo) {
+                  <span class="reason"><i class="bi bi-stars" aria-hidden="true"></i> {{ r.motivo }}</span>
+                }
+              </div>
+              <h3>{{ r.titulo }}</h3>
+              <p>{{ r.explicacion }}</p>
+              <span class="impact"><i class="bi bi-lightning-charge" aria-hidden="true"></i> {{ r.impacto }}</span>
+              <a class="btn-primary" [routerLink]="r.ruta">{{ r.accion }} <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            </article>
+          }
+        </div>
+      </section>
+    </div>
+  }
+</main>

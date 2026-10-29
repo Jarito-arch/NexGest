@@ -1,3 +1,29 @@
+/* ===== Variables de diseño de NexGest ===== */
+:root {
+  --nx-primary: #159c87;
+  --nx-primary-dark: #12786a;
+  --nx-primary-soft: #e8f5f0;
+  --nx-primary-softer: #f3faf7;
+  --nx-border: #d5e5df;
+  --nx-ink: #20241f;
+  --nx-muted: #6b6862;
+  --nx-muted-light: #8b918d;
+  --nx-surface: #ffffff;
+  --nx-bg: #fbf9f6;
+  --nx-danger: #d94c4c;
+  --nx-danger-soft: #fff0ed;
+  --nx-warning: #d98a1f;
+  --nx-warning-soft: #fff6e5;
+  --nx-success: #1e8a5f;
+  --nx-radius-sm: 8px;
+  --nx-radius: 10px;
+  --nx-radius-lg: 14px;
+  --nx-shadow: 0 4px 14px rgba(32, 36, 31, 0.08);
+  --nx-shadow-lg: 0 18px 48px rgba(32, 36, 31, 0.22);
+  --nx-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --nx-ease: 0.18s ease;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -7,7 +33,68 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  height: 100%;
-  font-family: 'Inter', sans-serif;
+  min-height: 100%;
+  font-family: var(--nx-font);
+  color: var(--nx-ink);
+}
+
+body {
+  overflow-x: hidden;
+}
+
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+/* ===== Accesibilidad ===== */
+:focus-visible {
+  outline: 2px solid var(--nx-primary);
+  outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ===== Transición suave al cambiar de pantalla ===== */
+router-outlet + * {
+  animation: nx-fade-in 0.18s ease both;
+}
+
+@keyframes nx-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Los campos que quitaban el contorno sin alternativa quedan con foco visible para teclado. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--nx-primary) !important;
+  outline-offset: 1px;
 }

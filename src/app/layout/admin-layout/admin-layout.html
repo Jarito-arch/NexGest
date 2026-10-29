@@ -1,7 +1,10 @@
 <div class="app-layout">
-  <app-sidebar class="sidebar"></app-sidebar>
+  <app-sidebar class="sidebar" id="menu-lateral" [class.open]="menuAbierto()"></app-sidebar>
+  @if (menuAbierto()) {
+    <div class="menu-backdrop" aria-hidden="true" (click)="menuAbierto.set(false)"></div>
+  }
   <div class="main-content">
-    <app-topbar></app-topbar>
+    <app-topbar [menuAbierto]="menuAbierto()" (menu)="alternarMenu()"></app-topbar>
     <div class="page-content">
       <router-outlet />
     </div>

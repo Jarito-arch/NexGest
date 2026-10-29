@@ -99,6 +99,76 @@
   cursor: pointer;
 }
 
+.profileBox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profileName {
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--nx-ink);
+}
+
+.menuButton {
+  display: none;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  background: #fff;
+  border: 1px solid #d5e5df;
+  border-radius: 10px;
+  font-size: 22px;
+  color: #20241f;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    height: 70px;
+    padding: 0 16px;
+  }
+
+  .menuButton {
+    display: inline-flex;
+  }
+
+  .pageInfo {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pageInfo span {
+    display: none;
+  }
+
+  .pageInfo h1 {
+    font-size: 17px;
+  }
+
+  .profileName,
+  .logout span {
+    display: none;
+  }
+
+  .topBarActions {
+    gap: 8px;
+  }
+
+  .logout {
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
 .logout:hover {
   background-color: #f3faf7;
   color: #d94c4c;

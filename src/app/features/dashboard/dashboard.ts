@@ -1,18 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Chatbot } from '../../core/services/chatbot';
+import { PlanAccion } from '../../core/services/plan-accion';
 
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   selector: 'app-dashboard',
-  styleUrl: './dashboard.css',
+  styleUrls: ['./dashboard.css', './dashboard-assistant.css', './dashboard-panels.css'],
   templateUrl: './dashboard.html',
 })
 
 export class Dashboard {
   private chatbot = inject(Chatbot);
+  readonly plan = inject(PlanAccion);
+
+  constructor() {
+    this.plan.sincronizar();
+  }
 
   asistenteAbierto = false;
   consulta = '';

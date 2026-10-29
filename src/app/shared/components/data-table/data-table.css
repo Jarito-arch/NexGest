@@ -1,0 +1,157 @@
+.table-wrap {
+  overflow-x: auto;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius-lg);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--nx-primary-soft);
+}
+
+th {
+  background: var(--nx-primary-softer);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--nx-muted);
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+tbody tr:hover {
+  background: var(--nx-primary-softer);
+}
+
+.numeric {
+  text-align: right;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.sort:hover {
+  color: var(--nx-ink);
+}
+
+.sort i {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.actions-col {
+  width: 1%;
+  text-align: right;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  background: transparent;
+  border: 0;
+  border-radius: var(--nx-radius-sm);
+  color: var(--nx-muted);
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  background: var(--nx-primary-soft);
+  color: var(--nx-primary-dark);
+}
+
+.icon-btn.danger:hover {
+  background: var(--nx-danger-soft);
+  color: var(--nx-danger);
+}
+
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 99px;
+  background: var(--nx-primary-soft);
+  color: var(--nx-primary-dark);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pill-off {
+  background: #eceeec;
+  color: var(--nx-muted);
+}
+
+/* En móvil cada fila se convierte en una tarjeta. */
+@media (max-width: 560px) {
+  table,
+  thead,
+  tbody,
+  tr,
+  td {
+    display: block;
+  }
+
+  thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+  }
+
+  tr {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--nx-border);
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 6px 16px;
+    border: 0;
+    white-space: normal;
+    text-align: right;
+  }
+
+  td::before {
+    content: attr(data-label);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--nx-muted);
+    text-align: left;
+  }
+
+  td.actions-col {
+    width: auto;
+    justify-content: flex-end;
+  }
+
+  td.actions-col::before {
+    content: none;
+  }
+}

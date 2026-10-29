@@ -42,7 +42,7 @@ export class Login {
     this.errors.set(errors);
     if (errors.email || errors.password) return;
 
-    this.auth.login();
+    this.auth.login(this.email);
     this.router.navigate(['/dashboard']);
   }
 }

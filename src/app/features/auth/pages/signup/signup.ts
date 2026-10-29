@@ -6,6 +6,8 @@ import { AuthCardComponent } from '../../../../shared/components/auth-card/auth-
 import { FormFieldComponent } from '../../../../shared/components/form-field/form-field';
 import { PrimaryButtonComponent } from '../../../../shared/components/primary-button/primary-button';
 import { Auth } from '../../../../core/services/auth';
+import { OnboardingService } from '../../../../core/services/onboarding-state';
+import { PlanAccion } from '../../../../core/services/plan-accion';
 
 @Component({
   selector: 'app-signup',
@@ -22,6 +24,8 @@ import { Auth } from '../../../../core/services/auth';
 })
 export class Signup {
   private auth = inject(Auth);
+  private onboarding = inject(OnboardingService);
+  private plan = inject(PlanAccion);
   private router = inject(Router);
 
   name = '';
@@ -44,7 +48,9 @@ export class Signup {
     this.errors.set(errors);
     if (errors.name || errors.email || errors.password) return;
 
-    this.auth.signup();
+    this.onboarding.reset();
+    this.plan.reiniciar();
+    this.auth.signup(this.name, this.email);
     this.router.navigate(['/onboarding/step1']);
   }
 }

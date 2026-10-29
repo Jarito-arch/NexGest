@@ -1,0 +1,83 @@
+<main class="module-page">
+  @if (modulo(); as m) {
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
+      <a routerLink="/custom-modules">Mis módulos</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span aria-current="page">{{ m.nombre }}</span>
+    </nav>
+
+    <header class="module-header">
+      <span class="module-icon" aria-hidden="true"><i class="bi" [class]="m.icono"></i></span>
+      <div class="module-text">
+        <h1>{{ m.nombre }}</h1>
+        <p>{{ m.descripcion }}</p>
+        <span class="module-category"><i class="bi bi-folder2" aria-hidden="true"></i> {{ m.categoria }}</span>
+      </div>
+      <button type="button" role="switch" class="switch" [attr.aria-checked]="m.activo" aria-label="Módulo activo" (click)="alternar()">
+        <span class="switch-track" aria-hidden="true"></span>
+        <span>{{ m.activo ? 'Activo' : 'Pausado' }}</span>
+      </button>
+    </header>
+
+    @if (!m.activo) {
+      <p class="notice"><i class="bi bi-pause-circle" aria-hidden="true"></i> Este módulo está en pausa. Sigue disponible, pero no aparece como activo en tu espacio.</p>
+    }
+
+    <div class="toolbar">
+      <label class="search">
+        <span class="sr-only">Buscar registros</span>
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input type="search" placeholder="Buscar en {{ m.nombre }}" [value]="busqueda()" (input)="buscar($event)" />
+      </label>
+      <span class="count" aria-live="polite">{{ filtrados().length }} de {{ registros().length }} registros</span>
+      <button type="button" class="btn-primary" (click)="nuevo()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo registro</button>
+    </div>
+
+    @if (aviso()) {
+      <p class="toast" role="status">{{ aviso() }}</p>
+    }
+
+    @if (registros().length === 0) {
+      <section class="empty-state">
+        <i class="bi bi-inbox" aria-hidden="true"></i>
+        <h2>Aún no tienes registros</h2>
+        <p>Crea el primero para empezar a usar {{ m.nombre }}.</p>
+        <button type="button" class="btn-primary" (click)="nuevo()"><i class="bi bi-plus-lg" aria-hidden="true"></i> Nuevo registro</button>
+      </section>
+    } @else if (filtrados().length === 0) {
+      <section class="empty-state">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <h2>Sin resultados</h2>
+        <p>No encontramos registros que coincidan con «{{ busqueda() }}».</p>
+        <button type="button" class="btn-ghost" (click)="busqueda.set('')">Limpiar búsqueda</button>
+      </section>
+    } @else {
+      <app-data-table [columnas]="columnas()" [filas]="filtrados()" [orden]="orden()" [descripcion]="'Registros de ' + m.nombre"
+        (ordenar)="ordenar($event)" (editar)="editar($event)" (eliminar)="pedirEliminar($event)" />
+    }
+
+    @if (formAbierto()) {
+      <app-dialog [titulo]="editando() ? 'Editar registro' : 'Nuevo registro'" (cerrar)="cerrarFormulario()">
+        <app-dynamic-form [campos]="camposForm()" [valores]="editando()" [etiquetaGuardar]="editando() ? 'Guardar cambios' : 'Crear registro'"
+          (guardar)="guardar($event)" (cancelar)="cerrarFormulario()" />
+      </app-dialog>
+    }
+
+    @if (eliminando()) {
+      <app-dialog titulo="Eliminar registro" [ancho]="420" (cerrar)="eliminando.set(null)">
+        <p class="confirm-text">¿Seguro que quieres eliminar este registro? Esta acción no se puede deshacer.</p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-ghost" (click)="eliminando.set(null)">Cancelar</button>
+          <button type="button" class="btn-danger" (click)="confirmarEliminar()">Sí, eliminar</button>
+        </div>
+      </app-dialog>
+    }
+  } @else {
+    <section class="empty-state not-found" role="status">
+      <i class="bi bi-grid" aria-hidden="true"></i>
+      <h1>No encontramos este módulo</h1>
+      <p>Es posible que haya sido eliminado o que el enlace no sea correcto.</p>
+      <a routerLink="/custom-modules" class="btn-primary"><i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a mis módulos</a>
+    </section>
+  }
+</main>

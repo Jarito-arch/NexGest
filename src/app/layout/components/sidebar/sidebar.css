@@ -96,7 +96,7 @@
 .menu a span,
 .ownerModules span,
 .ownerModules a>span,
-.systemModules a {
+.systemModules a>span {
     opacity: 0;
     visibility: hidden;
     transition:
@@ -107,7 +107,7 @@
 .sideBar:hover .menu a span,
 .sideBar:hover .ownerModules span,
 .sideBar:hover .ownerModules a>span,
-.sideBar:hover .systemModules a {
+.sideBar:hover .systemModules a>span {
     opacity: 1;
     visibility: visible;
 }
@@ -223,8 +223,47 @@
     opacity: .55;
 }
 
+.ownerModules a.active,
+.systemModules a.active {
+    background-color: #28594e;
+    color: #ffffff;
+}
+
+.ownerModules a.active>i,
+.systemModules a.active>i {
+    color: #5ce0c5;
+}
+
+.systemModules a>i {
+    min-width: 22px;
+    text-align: center;
+    font-size: 17px;
+    color: #a6ada7;
+}
+
 .systemModules {
     margin-top: 26px;
     padding-top: 18px;
     border-top: 1px solid #353b34;
+}
+
+@media (max-width: 768px) {
+    .sideBar,
+    .sideBar:hover {
+        width: 240px;
+        transition: none;
+    }
+
+    .sideBar .logo-icon {
+        width: 170px;
+        max-height: 65px;
+    }
+
+    .menu a span,
+    .ownerModules span,
+    .ownerModules a>span,
+    .systemModules a>span {
+        opacity: 1;
+        visibility: visible;
+    }
 }

@@ -1,1 +1,68 @@
-<p>settings works!</p>
+<main class="st-page">
+  <header>
+    <h1>Configuración</h1>
+    <p>Ajusta los datos de tu negocio y tus preferencias.</p>
+  </header>
+
+  @if (aviso()) {
+    <p class="toast" role="status">{{ aviso() }}</p>
+  }
+
+  <form class="card" novalidate (submit)="guardarNegocio($event)">
+    <h2>Datos del negocio</h2>
+    <div class="grid">
+      <div class="field full">
+        <label for="st-nombre">Nombre del negocio</label>
+        <input id="st-nombre" type="text" maxlength="80" autocomplete="organization" [ngModel]="nombre()" (ngModelChange)="nombre.set($event)" name="nombre"
+          [attr.aria-invalid]="errorNombre() ? true : null" [attr.aria-describedby]="errorNombre() ? 'st-nombre-error' : null" />
+        @if (errorNombre()) {
+          <span class="error" id="st-nombre-error" role="alert">{{ errorNombre() }}</span>
+        }
+      </div>
+      <div class="field">
+        <label for="st-categoria">Categoría</label>
+        <select id="st-categoria" [ngModel]="categoria()" (ngModelChange)="categoria.set($event)" name="categoria">
+          <option value="">Sin definir</option>
+          @for (c of categorias; track c) {
+            <option [value]="c">{{ c }}</option>
+          }
+        </select>
+      </div>
+      <div class="field">
+        <label for="st-equipo">Tamaño del equipo</label>
+        <select id="st-equipo" [ngModel]="equipo()" (ngModelChange)="equipo.set($event)" name="equipo">
+          <option value="">Sin definir</option>
+          @for (e of equipos; track e) {
+            <option [value]="e">{{ e }}</option>
+          }
+        </select>
+      </div>
+    </div>
+    <div class="actions"><button type="submit" class="btn-primary">Guardar datos</button></div>
+  </form>
+
+  <section class="card">
+    <h2>Preferencias</h2>
+    <label class="check"><input type="checkbox" [checked]="avisosCorreo()" (change)="avisosCorreo.set($any($event.target).checked)" /> Recibir avisos importantes por correo</label>
+    <label class="check"><input type="checkbox" [checked]="resumenSemanal()" (change)="resumenSemanal.set($any($event.target).checked)" /> Enviarme un resumen cada semana</label>
+    <div class="field short">
+      <label for="st-moneda">Moneda</label>
+      <select id="st-moneda" [ngModel]="moneda()" (ngModelChange)="moneda.set($event)" name="moneda">
+        <option value="PEN">Soles (S/)</option>
+        <option value="USD">Dólares (US$)</option>
+      </select>
+    </div>
+    <div class="actions"><button type="button" class="btn-primary" (click)="guardarPreferencias()">Guardar preferencias</button></div>
+  </section>
+
+  <section class="card">
+    <h2>Mi cuenta</h2>
+    <dl class="account">
+      <div><dt>Nombre</dt><dd>{{ auth.userName() || 'Sin nombre' }}</dd></div>
+      <div><dt>Correo</dt><dd>{{ auth.userEmail() || 'Sin correo' }}</dd></div>
+    </dl>
+    <div class="actions">
+      <button type="button" class="btn-ghost danger" (click)="cerrarSesion()"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Cerrar sesión</button>
+    </div>
+  </section>
+</main>

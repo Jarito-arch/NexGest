@@ -1,0 +1,136 @@
+<main class="pa-page">
+  <header class="pa-header">
+    <div class="pa-intro">
+      <h1>Plan de acción</h1>
+      <p>
+        @if (plan.origen() === 'onboarding') {
+          Un camino paso a paso armado con lo que nos contaste de tu negocio.
+        } @else {
+          Un camino paso a paso para ordenar, medir y hacer crecer tu negocio.
+        }
+      </p>
+    </div>
+    <div class="pa-actions">
+      <button type="button" class="btn-ghost" (click)="reinicioAbierto.set(true)"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i> Reiniciar plan</button>
+      <button type="button" class="btn-primary" (click)="formularioAbierto.set(true)"><i class="bi bi-plus-lg" aria-hidden="true"></i> Agregar tarea</button>
+    </div>
+  </header>
+
+  @if (plan.total() === 0) {
+    <section class="state-card">
+      <i class="bi bi-signpost-split" aria-hidden="true"></i>
+      <h2>Aún no tienes tareas</h2>
+      <p>Genera tu plan para empezar a avanzar.</p>
+      <button type="button" class="btn-primary" (click)="plan.reiniciar()">Generar mi plan</button>
+    </section>
+  } @else {
+    <section class="progress-card" aria-label="Progreso total">
+      <div class="progress-top">
+        <strong>{{ plan.progreso() }}% completado</strong>
+        <span>{{ plan.hechas() }} de {{ plan.total() }} tareas hechas</span>
+        @if (atrasadas() > 0) {
+          <span class="late-chip"><i class="bi bi-exclamation-circle" aria-hidden="true"></i> {{ atrasadas() }} {{ atrasadas() === 1 ? 'tarea atrasada' : 'tareas atrasadas' }}</span>
+        }
+      </div>
+      <div class="progress-bar" role="progressbar" aria-label="Progreso del plan" aria-valuemin="0" aria-valuemax="100" [attr.aria-valuenow]="plan.progreso()">
+        <span [style.width.%]="plan.progreso()"></span>
+      </div>
+    </section>
+
+    <ol class="timeline">
+      @for (fase of plan.fases; track fase.id; let i = $index) {
+        <li class="phase" [class]="'phase ' + estadoFase(fase.id)">
+          <span class="phase-marker" aria-hidden="true">
+            @if (estadoFase(fase.id) === 'completa') {
+              <i class="bi bi-check-lg"></i>
+            } @else {
+              <i class="bi" [class]="fase.icono"></i>
+            }
+          </span>
+
+          <section class="phase-card">
+            <header class="phase-head">
+              <div>
+                <span class="phase-step">Fase {{ i + 1 }}</span>
+                <h2>{{ fase.nombre }}</h2>
+                <p>{{ fase.descripcion }}</p>
+              </div>
+              <div class="phase-side">
+                @if (estadoFase(fase.id) === 'actual') {
+                  <span class="current-badge">Estás aquí</span>
+                } @else if (estadoFase(fase.id) === 'completa') {
+                  <span class="done-badge">Completada</span>
+                }
+                <span class="phase-count">{{ hechasDe(fase.id) }}/{{ plan.tareasDe(fase.id).length }}</span>
+              </div>
+            </header>
+
+            <ul class="tasks">
+              @for (t of plan.tareasDe(fase.id); track t.id) {
+                <li class="task" [class.is-done]="t.estado === 'hecha'" [class.is-late]="plan.estaAtrasada(t)">
+                  <button type="button" class="check" [attr.aria-pressed]="t.estado === 'hecha'"
+                    [attr.aria-label]="(t.estado === 'hecha' ? 'Marcar como pendiente: ' : 'Marcar como hecha: ') + t.titulo" (click)="plan.alternarHecha(t.id)">
+                    <i class="bi bi-check-lg" aria-hidden="true"></i>
+                  </button>
+
+                  <div class="task-body">
+                    <h3>{{ t.titulo }}</h3>
+                    @if (t.descripcion) {
+                      <p>{{ t.descripcion }}</p>
+                    }
+                    <div class="task-meta">
+                      @if (t.ruta) {
+                        <a class="meta-link" [routerLink]="t.ruta"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> {{ t.modulo }}</a>
+                      }
+                      @if (t.duracion) {
+                        <span class="meta-chip"><i class="bi bi-clock" aria-hidden="true"></i> {{ t.duracion }}</span>
+                      }
+                      <span class="meta-chip" [class.late]="plan.estaAtrasada(t)">
+                        <i class="bi bi-calendar-event" aria-hidden="true"></i>
+                        {{ fecha(t.fechaObjetivo) }}@if (plan.estaAtrasada(t)) { · Atrasada }
+                      </span>
+                      @if (t.propia) {
+                        <span class="meta-chip own">Tarea propia</span>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="task-controls">
+                    <label class="sr-only" [for]="'estado-' + t.id">Estado de {{ t.titulo }}</label>
+                    <select class="state-select" [id]="'estado-' + t.id" [value]="t.estado" (change)="cambiarEstado(t, $event)">
+                      @for (e of estados; track e.valor) {
+                        <option [value]="e.valor" [selected]="t.estado === e.valor">{{ e.etiqueta }}</option>
+                      }
+                    </select>
+                    @if (t.propia) {
+                      <button type="button" class="icon-btn" aria-label="Eliminar tarea" title="Eliminar tarea" (click)="plan.eliminar(t.id)">
+                        <i class="bi bi-trash3" aria-hidden="true"></i>
+                      </button>
+                    }
+                  </div>
+                </li>
+              }
+            </ul>
+          </section>
+        </li>
+      }
+    </ol>
+  }
+
+  @if (formularioAbierto()) {
+    <app-dialog titulo="Agregar tarea propia" (cerrar)="formularioAbierto.set(false)">
+      <app-dynamic-form [campos]="camposTarea" [valores]="valoresIniciales()" etiquetaGuardar="Agregar tarea"
+        (guardar)="guardarTarea($event)" (cancelar)="formularioAbierto.set(false)" />
+    </app-dialog>
+  }
+
+  @if (reinicioAbierto()) {
+    <app-dialog titulo="Reiniciar plan" [ancho]="440" (cerrar)="reinicioAbierto.set(false)">
+      <p class="confirm-text">Volveremos a generar tu plan y perderás el progreso y las tareas propias que hayas agregado. ¿Quieres continuar?</p>
+      <div class="confirm-actions">
+        <button type="button" class="btn-ghost" (click)="reinicioAbierto.set(false)">Cancelar</button>
+        <button type="button" class="btn-danger" (click)="confirmarReinicio()">Sí, reiniciar</button>
+      </div>
+    </app-dialog>
+  }
+</main>

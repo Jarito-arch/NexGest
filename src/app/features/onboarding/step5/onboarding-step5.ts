@@ -34,4 +34,9 @@ export class OnboardingStep5 {
     this.auth.completeOnboarding();
     this.router.navigate(['/dashboard']);
   }
+
+  verPlan() {
+    this.auth.completeOnboarding();
+    this.router.navigate(['/planAccion']);
+  }
 }

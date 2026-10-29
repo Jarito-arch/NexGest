@@ -1,1 +1,65 @@
-<p>team-management works!</p>
+<main class="tm-page">
+  <header>
+    <h1>Equipo</h1>
+    <p>Invita a las personas que trabajan contigo y define qué puede hacer cada una.</p>
+  </header>
+
+  @if (aviso()) {
+    <p class="toast" role="status">{{ aviso() }}</p>
+  }
+
+  <form class="card invite" novalidate (submit)="invitar($event)">
+    <h2>Invitar a alguien</h2>
+    <div class="invite-row">
+      <div class="field grow">
+        <label for="tm-correo">Correo electrónico</label>
+        <input id="tm-correo" type="email" autocomplete="off" placeholder="persona@correo.com" [ngModel]="correo()" (ngModelChange)="correo.set($event)" name="correo"
+          [attr.aria-invalid]="error() ? true : null" [attr.aria-describedby]="error() ? 'tm-error' : null" />
+      </div>
+      <div class="field">
+        <label for="tm-rol">Rol</label>
+        <select id="tm-rol" [ngModel]="rol()" (ngModelChange)="rol.set($event)" name="rol">
+          @for (r of roles; track r) {
+            <option [value]="r">{{ r }}</option>
+          }
+        </select>
+      </div>
+      <button type="submit" class="btn-primary"><i class="bi bi-send" aria-hidden="true"></i> Enviar invitación</button>
+    </div>
+    @if (error()) {
+      <span class="error" id="tm-error" role="alert">{{ error() }}</span>
+    }
+  </form>
+
+  <section class="card">
+    <h2>Miembros ({{ miembros().length }})</h2>
+    <ul class="members">
+      @for (m of miembros(); track m.id) {
+        <li class="member">
+          <span class="avatar" aria-hidden="true">{{ iniciales(m.nombre) }}</span>
+          <div class="info">
+            <strong>{{ m.nombre }}</strong>
+            <span>{{ m.correo }}</span>
+          </div>
+          <span class="state" [class.pending]="m.estado !== 'Activo'">{{ m.estado }}</span>
+          @if (m.rol === 'Propietario') {
+            <span class="role-fixed">Propietario</span>
+          } @else {
+            <label class="sr-only" [for]="'rol-' + m.id">Rol de {{ m.nombre }}</label>
+            <select class="role-select" [id]="'rol-' + m.id" [value]="m.rol" (change)="cambiarRol(m.id, $any($event.target).value)">
+              @for (r of roles; track r) {
+                <option [value]="r" [selected]="m.rol === r">{{ r }}</option>
+              }
+            </select>
+            <button type="button" class="icon-btn" [attr.aria-label]="'Quitar a ' + m.nombre" title="Quitar" (click)="quitar(m.id)">
+              <i class="bi bi-trash3" aria-hidden="true"></i>
+            </button>
+          }
+        </li>
+      }
+    </ul>
+    @if (miembros().length === 1) {
+      <p class="hint">Aún estás solo en tu equipo. Invita a alguien para empezar a colaborar.</p>
+    }
+  </section>
+</main>

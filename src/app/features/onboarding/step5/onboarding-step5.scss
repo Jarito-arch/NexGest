@@ -76,3 +76,16 @@ app-primary-button {
     transform: translateY(-8px);
   }
 }
+
+.plan-link {
+  margin-top: 14px;
+  padding: 6px;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #159c87;
+  text-decoration: underline;
+  cursor: pointer;
+}

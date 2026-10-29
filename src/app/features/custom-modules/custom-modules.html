@@ -54,7 +54,11 @@
                         aria-label="Tipo del campo">
                         <option *ngFor="let tipo of tiposCampo" [value]="tipo">{{ tipo }}</option>
                     </select><button type="button" class="secondary-button" (click)="agregarCampo()"
-                        [disabled]="!nuevoCampo.trim()"><i class="bi bi-plus-lg"></i> Añadir campo</button></div>
+                        [disabled]="!puedeAgregarCampo"><i class="bi bi-plus-lg"></i> Añadir campo</button></div>
+                <div class="add-field-row" *ngIf="tipoNuevoCampo === 'Selección'"><input [(ngModel)]="opcionesNuevoCampo"
+                        placeholder="Opciones separadas por coma. Ej. Pendiente, En curso, Listo" maxlength="200"
+                        aria-label="Opciones de la selección" (keydown.enter)="$event.preventDefault(); agregarCampo()"></div>
+                <p class="panel-copy" *ngIf="campos.length === 0">Agrega al menos un campo para continuar.</p>
             </section>
             <aside class="type-panel">
                 <h3>Tipos disponibles</h3>
@@ -119,7 +123,7 @@
         <footer class="step-actions"><button type="button" class="secondary-button back-button" *ngIf="paso > 0"
                 (click)="volver()"><i class="bi bi-arrow-left"></i> Atrás</button><span class="action-spacer"
                 *ngIf="paso === 0"></span><button type="button" class="primary-button" *ngIf="paso < 4"
-                (click)="continuar()" [disabled]="paso === 0 && !nombre.trim()">Continuar <i
+                (click)="continuar()" [disabled]="(paso === 0 && !nombre.trim()) || (paso === 1 && campos.length === 0)">Continuar <i
                     class="bi bi-arrow-right"></i></button><button type="button" class="primary-button"
                 *ngIf="paso === 4" (click)="crearModulo()" [disabled]="!nombre.trim()">Crear módulo <i
                     class="bi bi-check2"></i></button></footer>
@@ -129,9 +133,10 @@
                 class="bi bi-check-lg"></i></span>
         <div>
             <h2>{{ moduloCreado.nombre }} ya está en tu sidebar</h2>
-            <p>El módulo se guardó en este navegador. Puedes abrirlo desde el menú lateral.</p>
-        </div><button type="button" class="primary-button" (click)="nuevoModulo()">Crear otro <i
-                class="bi bi-plus-lg"></i></button>
+            <p>El módulo se guardó en este navegador. Ábrelo ahora o búscalo en el menú lateral.</p>
+        </div><button type="button" class="secondary-button" (click)="nuevoModulo()">Crear otro <i
+                class="bi bi-plus-lg"></i></button><button type="button" class="primary-button" (click)="abrirModulo()">Abrir módulo <i
+                class="bi bi-box-arrow-up-right"></i></button>
     </section>
 
     <section class="module-list">
@@ -157,7 +162,7 @@
                     </div>
                     <p>{{ modulo.descripcion }}</p><small>{{ modulo.categoria }} · {{ modulo.campos?.length || 0 }}
                         campos</small>
-                </div><button type="button" class="module-toggle" (click)="alternar(modulo)">{{ modulo.activo ? 'Pausar'
+                </div><a class="module-toggle module-open" [routerLink]="['/custom-modules', modulo.id]" [attr.aria-label]="'Abrir ' + modulo.nombre">Abrir</a><button type="button" class="module-toggle" (click)="alternar(modulo)">{{ modulo.activo ? 'Pausar'
                     :
                     'Activar' }}</button>
             </article>
