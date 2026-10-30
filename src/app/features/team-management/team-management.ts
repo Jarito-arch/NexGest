@@ -1,34 +1,23 @@
-import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Auth } from '../../core/services/auth';
-
-export type Rol = 'Propietario' | 'Administrador' | 'Editor' | 'Solo lectura';
-
-interface Miembro {
-  id: string;
-  nombre: string;
-  correo: string;
-  rol: Rol;
-  estado: 'Activo' | 'Invitación pendiente';
-}
-
-const STORAGE_KEY = 'nexgest-equipo';
+import { Equipo, MODULOS_BASE, Miembro, ModuloAcceso } from '../../core/services/equipo';
+import { Tenant } from '../../core/services/tenant';
 
 @Component({
-  imports: [FormsModule],
   selector: 'app-team-management',
   styleUrl: './team-management.css',
   templateUrl: './team-management.html',
 })
 export class TeamManagement {
   private auth = inject(Auth);
-  private platformId = inject(PLATFORM_ID);
+  private equipo = inject(Equipo);
+  private tenant = inject(Tenant);
 
-  readonly roles: Rol[] = ['Administrador', 'Editor', 'Solo lectura'];
-
-  /** Miembros agregados o invitados por el usuario (simulado; el propietario se arma desde la sesión). */
-  private extras = signal<Miembro[]>(this.cargar());
+  /** Módulos que se pueden habilitar: los del sistema y los que el propietario creó. */
+  readonly modulosDisponibles = computed<ModuloAcceso[]>(() => [
+    ...MODULOS_BASE,
+    ...this.tenant.customModules().map((m) => ({ clave: `custom:${m.id}`, nombre: m.nombre, icono: m.icono })),
+  ]);
 
   readonly miembros = computed<Miembro[]>(() => [
     {
@@ -37,14 +26,24 @@ export class TeamManagement {
       correo: this.auth.userEmail() || 'Sin correo',
       rol: 'Propietario',
       estado: 'Activo',
+      modulos: [],
     },
-    ...this.extras(),
+    ...this.equipo.extras(),
   ]);
 
   correo = signal('');
-  rol = signal<Rol>('Editor');
+  /** Módulos marcados para la próxima invitación (por defecto, ninguno). */
+  modulosNuevos = signal<string[]>([]);
   error = signal('');
   aviso = signal('');
+
+  escribirCorreo(event: Event): void {
+    this.correo.set((event.target as HTMLInputElement).value);
+  }
+
+  alternarNuevo(clave: string): void {
+    this.modulosNuevos.update((lista) => (lista.includes(clave) ? lista.filter((c) => c !== clave) : [...lista, clave]));
+  }
 
   invitar(event: Event): void {
     event.preventDefault();
@@ -57,19 +56,32 @@ export class TeamManagement {
       this.error.set('Esa persona ya está en tu equipo');
       return;
     }
+    if (!this.modulosNuevos().length) {
+      this.error.set('Elige al menos un módulo al que pueda acceder');
+      return;
+    }
     this.error.set('');
     const nombre = correo.split('@')[0].split(/[._-]+/).filter(Boolean).map((p) => p[0].toUpperCase() + p.slice(1)).join(' ');
-    this.guardar([...this.extras(), { id: `m${Date.now()}`, nombre, correo, rol: this.rol(), estado: 'Invitación pendiente' }]);
+    this.equipo.agregar({
+      id: `m${Date.now()}`,
+      nombre,
+      correo,
+      rol: 'Empleado',
+      estado: 'Invitación pendiente',
+      modulos: this.modulosNuevos(),
+    });
     this.correo.set('');
-    this.mostrarAviso(`Invitación enviada a ${correo} (simulada).`);
+    this.modulosNuevos.set([]);
+    this.mostrarAviso(`Invitación enviada a ${correo} (simulada). Podrá entrar con ese correo como empleado.`);
   }
 
-  cambiarRol(id: string, rol: string): void {
-    this.guardar(this.extras().map((m) => (m.id === id ? { ...m, rol: rol as Rol } : m)));
+  alternarModulo(miembro: Miembro, clave: string): void {
+    const modulos = miembro.modulos.includes(clave) ? miembro.modulos.filter((c) => c !== clave) : [...miembro.modulos, clave];
+    this.equipo.cambiarModulos(miembro.id, modulos);
   }
 
   quitar(id: string): void {
-    this.guardar(this.extras().filter((m) => m.id !== id));
+    this.equipo.quitar(id);
   }
 
   iniciales(nombre: string): string {
@@ -77,28 +89,8 @@ export class TeamManagement {
     return ((partes[0]?.[0] ?? '?') + (partes[1]?.[0] ?? '')).toUpperCase();
   }
 
-  private guardar(lista: Miembro[]): void {
-    this.extras.set(lista);
-    if (!isPlatformBrowser(this.platformId)) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
-    } catch {
-      // Sigue funcionando en memoria.
-    }
-  }
-
-  private cargar(): Miembro[] {
-    if (!isPlatformBrowser(this.platformId)) return [];
-    try {
-      const data: unknown = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]');
-      return Array.isArray(data) ? (data as Miembro[]) : [];
-    } catch {
-      return [];
-    }
-  }
-
   private mostrarAviso(texto: string): void {
     this.aviso.set(texto);
-    setTimeout(() => this.aviso.set(''), 3500);
+    setTimeout(() => this.aviso.set(''), 4500);
   }
 }

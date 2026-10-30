@@ -1,11 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Dialog } from '../../shared/components/dialog/dialog';
+import { Permisos } from '../../core/services/permisos';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 interface Proveedor { nombre: string; telefono: string; correo: string; direccion: string; }
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Dialog],
   selector: 'app-proveedores',
   styleUrl: './proveedores.css',
   templateUrl: './proveedores.html',
@@ -33,16 +35,50 @@ export class Proveedores {
   get conCorreo(): number { return this.proveedores.filter(p => !!p.correo).length; }
   get conDireccion(): number { return this.proveedores.filter(p => !!p.direccion).length; }
 
+  // ----- Modales: nuevo proveedor y eliminar -----
+  readonly permisos = inject(Permisos);
+  formAbierto = false;
+  proveedorAEliminar: Proveedor | null = null;
+  formProveedor = { nombre: '', telefono: '', correo: '', direccion: '' };
+  errores: { nombre?: string; telefono?: string; correo?: string } = {};
+
+  texto(event: Event): string { return (event.target as HTMLInputElement).value; }
+
   nuevoProveedor(): void {
-    const nombre = prompt('Nombre del proveedor:')?.trim();
-    if (!nombre) return;
-    const telefono = prompt('Teléfono (opcional):')?.trim() ?? '';
-    const correo = prompt('Correo (opcional):')?.trim() ?? '';
-    const direccion = prompt('Dirección (opcional):')?.trim() ?? '';
-    this.proveedores = [...this.proveedores, { nombre, telefono, correo, direccion }];
+    this.formProveedor = { nombre: '', telefono: '', correo: '', direccion: '' };
+    this.errores = {};
+    this.formAbierto = true;
   }
+
+  cerrarFormulario(): void {
+    this.formAbierto = false;
+    this.errores = {};
+  }
+
+  guardarProveedor(): void {
+    const nombre = this.formProveedor.nombre.trim();
+    const telefono = this.formProveedor.telefono.trim();
+    const correo = this.formProveedor.correo.trim();
+    const errores: typeof this.errores = {};
+    if (!nombre) errores.nombre = 'Escribe el nombre del proveedor.';
+    else if (this.proveedores.some(p => p.nombre.toLocaleLowerCase() === nombre.toLocaleLowerCase())) errores.nombre = 'Ya tienes un proveedor con ese nombre.';
+    if (telefono && !/^[\d\s+()-]{6,20}$/.test(telefono)) errores.telefono = 'Ingresa un teléfono válido.';
+    if (correo && !/^\S+@\S+\.\S+$/.test(correo)) errores.correo = 'Ingresa un correo válido.';
+    this.errores = errores;
+    if (Object.keys(errores).length) return;
+    this.proveedores = [...this.proveedores, { nombre, telefono, correo, direccion: this.formProveedor.direccion.trim() }];
+    this.cerrarFormulario();
+  }
+
   eliminar(proveedor: Proveedor): void {
-    if (confirm(`¿Eliminar a ${proveedor.nombre}?`)) this.proveedores = this.proveedores.filter(p => p !== proveedor);
+    this.proveedorAEliminar = proveedor;
   }
+
+  confirmarEliminar(): void {
+    const proveedor = this.proveedorAEliminar;
+    if (proveedor) this.proveedores = this.proveedores.filter(p => p !== proveedor);
+    this.proveedorAEliminar = null;
+  }
+
   iniciales(nombre: string): string { return nombre.split(/\s+/).slice(0, 2).map(p => p[0]).join('').toLocaleUpperCase(); }
 }

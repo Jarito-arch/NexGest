@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Permisos } from '../../core/services/permisos';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Dialog } from '../../shared/components/dialog/dialog';
 
 interface Cliente {
   nombre: string;
@@ -12,12 +14,13 @@ interface Cliente {
 }
 
 @Component({
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, Dialog],
   selector: 'app-clientes',
   styleUrl: './clientes.css',
   templateUrl: './clientes.html',
 })
 export class Clientes {
+  readonly permisos = inject(Permisos);
   busqueda: string = '';
   estadoSeleccionado: string = 'Todos';
   periodoSeleccionado: string = '30';
@@ -203,6 +206,13 @@ export class Clientes {
   ];
 
 
+  /** Lectura directa de campos (los modales usan value/input en vez de ngModel). */
+  texto(event: Event): string { return (event.target as HTMLInputElement).value; }
+  numero(event: Event): number | null {
+    const valor = (event.target as HTMLInputElement).valueAsNumber;
+    return isNaN(valor) ? null : valor;
+  }
+
   filtrarClientes(): void {
 
     const texto = this.busqueda.toLowerCase().trim();
@@ -235,18 +245,72 @@ export class Clientes {
   }
 
 
+  // ----- Modales: nuevo, editar y ver cliente -----
+  formAbierto = false;
+  editando: Cliente | null = null;
+  viendo: Cliente | null = null;
+  readonly estadosCliente = ['Activo', 'Frecuente', 'Inactivo'];
+  formCliente = { nombre: '', telefono: '', email: '', estado: 'Activo' };
+  erroresCliente: { nombre?: string; telefono?: string; email?: string } = {};
+
   nuevoCliente(): void {
-    console.log('Nuevo cliente');
+    this.editando = null;
+    this.formCliente = { nombre: '', telefono: '', email: '', estado: 'Activo' };
+    this.erroresCliente = {};
+    this.formAbierto = true;
   }
 
+  cerrarFormulario(): void {
+    this.formAbierto = false;
+    this.editando = null;
+    this.erroresCliente = {};
+  }
+
+  guardarCliente(): void {
+    const nombre = this.formCliente.nombre.trim();
+    const telefono = this.formCliente.telefono.trim();
+    const email = this.formCliente.email.trim();
+    const estado = this.formCliente.estado;
+
+    const errores: typeof this.erroresCliente = {};
+    if (!nombre) errores.nombre = 'Escribe el nombre del cliente.';
+    if (!telefono) errores.telefono = 'Escribe un teléfono de contacto.';
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errores.email = 'El correo no tiene un formato válido.';
+    this.erroresCliente = errores;
+    if (Object.keys(errores).length) return;
+
+    if (this.editando) {
+      this.ajustarEstado(this.editando.estado, -1);
+      Object.assign(this.editando, { nombre, telefono, email, estado });
+      this.ajustarEstado(estado, 1);
+    } else {
+      this.clientes = [
+        { nombre, telefono, email, estado, compras: 0, ultimaCompra: 'Sin compras' },
+        ...this.clientes,
+      ];
+      this.estadisticas.total++;
+      this.ajustarEstado(estado, 1);
+    }
+
+    this.cerrarFormulario();
+    this.filtrarClientes();
+  }
+
+  private ajustarEstado(estado: string, delta: number): void {
+    if (estado === 'Frecuente') this.estadisticas.frecuentes += delta;
+    if (estado === 'Inactivo') this.estadisticas.inactivos += delta;
+  }
 
   verCliente(cliente: Cliente): void {
-    console.log('Ver cliente:', cliente);
+    this.viendo = cliente;
   }
 
 
   editarCliente(cliente: Cliente): void {
-    console.log('Editar cliente:', cliente);
+    this.editando = cliente;
+    this.formCliente = { nombre: cliente.nombre, telefono: cliente.telefono, email: cliente.email, estado: cliente.estado };
+    this.erroresCliente = {};
+    this.formAbierto = true;
   }
 
 
@@ -263,6 +327,8 @@ export class Clientes {
     this.clientes = this.clientes.filter(
       c => c !== cliente
     );
+    this.estadisticas.total = Math.max(0, this.estadisticas.total - 1);
+    this.ajustarEstado(cliente.estado, -1);
 
     this.filtrarClientes();
   }

@@ -216,3 +216,125 @@ input[aria-invalid='true'] {
     justify-content: center;
   }
 }
+
+/* ===== Roles y acceso por módulo ===== */
+.roles-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.role-box {
+  padding: 14px 16px;
+  background: var(--nx-primary-softer);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-radius);
+}
+
+.role-box strong {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.role-box p {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--nx-muted);
+}
+
+.modules {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.modules legend {
+  margin-bottom: 8px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.module-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.module-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 14px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.module-option.on {
+  background: var(--nx-primary-soft);
+  border-color: var(--nx-primary);
+  color: var(--nx-primary-dark);
+}
+
+.module-option input {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  accent-color: var(--nx-primary);
+}
+
+.member-modules {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding-left: 50px;
+}
+
+.member-modules-label {
+  margin-right: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--nx-muted);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 11px;
+  background: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: 99px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--nx-muted);
+  cursor: pointer;
+}
+
+.chip.on {
+  background: var(--nx-primary-soft);
+  border-color: var(--nx-primary);
+  color: var(--nx-primary-dark);
+}
+
+@media (max-width: 640px) {
+  .roles-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .member-modules {
+    padding-left: 0;
+  }
+}

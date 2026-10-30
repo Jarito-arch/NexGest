@@ -13,30 +13,40 @@
         <span>Dashboard</span>
       </a>
 
+      @if (permisos.puedeVer('ventas')) {
       <a class="menu-item" routerLink="/ventas" routerLinkActive="active">
         <i class="bi bi-cart3"></i>
         <span>Ventas</span>
       </a>
+      }
 
+      @if (permisos.puedeVer('inventario')) {
       <a class="menu-item" routerLink="/inventario" routerLinkActive="active">
         <i class="bi bi-box-seam"></i>
         <span>Inventario</span>
       </a>
+      }
 
+      @if (permisos.puedeVer('finanzas')) {
       <a class="menu-item" routerLink="/finanzas" routerLinkActive="active">
         <i class="bi bi-cash-stack"></i>
         <span>Finanzas</span>
       </a>
+      }
 
+      @if (permisos.puedeVer('clientes')) {
       <a class="menu-item" routerLink="/clientes" routerLinkActive="active">
         <i class="bi bi-people"></i>
         <span>Clientes</span>
       </a>
+      }
 
+      @if (permisos.puedeVer('proveedores')) {
       <a class="menu-item" routerLink="/proveedores" routerLinkActive="active">
         <i class="bi bi-truck"></i>
         <span>Proveedores</span>
       </a>
+      }
 
       <div class="tab"></div>
 
@@ -49,9 +59,12 @@
         <i class="bi" [ngClass]="modulo.icono"></i>
         <span>{{ modulo.nombre }}</span>
       </a>
+      @if (permisos.esPropietario()) {
       <a routerLink="/custom-modules" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" title="Crear módulo"><i class="bi bi-plus-lg"></i><span>Crear módulo</span></a>
+      }
     </nav>
 
+    @if (permisos.esPropietario()) {
     <nav class="systemModules">
       <a routerLink="/centroInteligencia" routerLinkActive="active" title="Centro de Inteligencia">
         <i class="bi bi-stars" aria-hidden="true"></i><span>Centro de Inteligencia</span>
@@ -66,6 +79,7 @@
         <i class="bi bi-gear" aria-hidden="true"></i><span>Configuración</span>
       </a>
     </nav>
+    }
 
   </div>
 </aside>

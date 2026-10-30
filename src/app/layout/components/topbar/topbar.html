@@ -9,15 +9,12 @@
     </div>
 
     <div class="topBarActions">
-        <a routerLink="/notificacion" class="notification"
-            [attr.aria-label]="avisos.sinLeer() ? 'Notificaciones, ' + avisos.sinLeer() + ' sin leer' : 'Notificaciones'">
-            <i class="bi bi-bell" aria-hidden="true"></i>
-            @if (avisos.sinLeer() > 0) {
-                <span class="notificationDot"></span>
-            }
-        </a>
         <div class="profileBox">
-            <div class="profile" aria-hidden="true">{{ auth.initials() }}</div>
+            @if (permisos.esPropietario()) {
+                <a routerLink="/configuracion" class="profile" title="Configuración del negocio" aria-label="Ir a configuración">{{ iniciales() }}</a>
+            } @else {
+                <div class="profile" aria-hidden="true">{{ iniciales() }}</div>
+            }
             <span class="profileName">{{ auth.userName() || 'Mi cuenta' }}</span>
         </div>
         <button type="button" class="logout" title="Cerrar sesión" (click)="logout()">
@@ -25,4 +22,4 @@
             <span>Cerrar sesión</span>
         </button>
     </div>
-</div>
+</div>

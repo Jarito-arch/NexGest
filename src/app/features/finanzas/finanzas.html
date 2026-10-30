@@ -63,7 +63,7 @@
 
         <div class="search">
             <i class="bi bi-search"></i>
-            <input type="search" placeholder="Buscar movimiento..." [(ngModel)]="busqueda"
+            <input type="search" placeholder="Buscar movimiento..." [value]="busqueda" (input)="busqueda = texto($event)"
                 aria-label="Buscar movimientos" />
         </div>
 
@@ -84,12 +84,13 @@
                 Gastos
             </button>
 
-            <select [(ngModel)]="categoriaSeleccionada" aria-label="Categoría">
+            <select (change)="categoriaSeleccionada = $any($event.target).value" aria-label="Categoría">
                 <option>Todas</option>
                 <option>Ventas</option>
                 <option>Servicios</option>
                 <option>Publicidad</option>
                 <option>Insumos</option>
+                <option>Otros</option>
             </select>
 
         </div>
@@ -257,3 +258,48 @@
     </section>
 
 </main>
+
+@if (formAbierto) {
+    <app-dialog titulo="Registrar movimiento" [ancho]="480" (cerrar)="cerrarFormulario()">
+        <div class="nx-form">
+            <label class="nx-field">
+                <span class="nx-label">Tipo de movimiento</span>
+                <select class="nx-control" (change)="formMov.tipo = $any($event.target).value">
+                    <option value="Ingreso" [selected]="formMov.tipo === 'Ingreso'">Ingreso</option>
+                    <option value="Gasto" [selected]="formMov.tipo === 'Gasto'">Gasto</option>
+                </select>
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Descripción <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="erroresMov.descripcion" type="text" maxlength="120" autocomplete="off"
+                    [value]="formMov.descripcion" (input)="formMov.descripcion = texto($event)" (keydown.enter)="guardarMovimiento()" placeholder="Ej. Compra de insumos">
+                @if (erroresMov.descripcion) { <span class="nx-error" role="alert">{{ erroresMov.descripcion }}</span> }
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Categoría</span>
+                <select class="nx-control" (change)="formMov.categoria = $any($event.target).value">
+                    @for (cat of categoriasForm; track cat) { <option [value]="cat" [selected]="formMov.categoria === cat">{{ cat }}</option> }
+                </select>
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Monto (S/) <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="erroresMov.monto" type="number" min="0" step="0.01" inputmode="decimal"
+                    [value]="formMov.monto ?? ''" (input)="formMov.monto = numero($event)" (keydown.enter)="guardarMovimiento()" placeholder="0.00">
+                @if (erroresMov.monto) { <span class="nx-error" role="alert">{{ erroresMov.monto }}</span> }
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Fecha</span>
+                <input class="nx-control" type="date" [value]="formMov.fecha" (input)="formMov.fecha = texto($event)">
+            </label>
+
+            <div class="nx-actions">
+                <button type="button" class="nx-btn" (click)="cerrarFormulario()">Cancelar</button>
+                <button type="button" class="nx-btn nx-btn-primary" (click)="guardarMovimiento()">Registrar</button>
+            </div>
+        </div>
+    </app-dialog>
+}

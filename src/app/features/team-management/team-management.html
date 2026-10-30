@@ -1,34 +1,51 @@
 <main class="tm-page">
   <header>
     <h1>Equipo</h1>
-    <p>Invita a las personas que trabajan contigo y define qué puede hacer cada una.</p>
+    <p>Invita a las personas que trabajan contigo y elige a qué módulos pueden entrar.</p>
   </header>
 
   @if (aviso()) {
     <p class="toast" role="status">{{ aviso() }}</p>
   }
 
-  <form class="card invite" novalidate (submit)="invitar($event)">
-    <h2>Invitar a alguien</h2>
-    <div class="invite-row">
-      <div class="field grow">
-        <label for="tm-correo">Correo electrónico</label>
-        <input id="tm-correo" type="email" autocomplete="off" placeholder="persona@correo.com" [ngModel]="correo()" (ngModelChange)="correo.set($event)" name="correo"
-          [attr.aria-invalid]="error() ? true : null" [attr.aria-describedby]="error() ? 'tm-error' : null" />
+  <section class="card roles" aria-label="Qué puede hacer cada rol">
+    <h2>Roles</h2>
+    <div class="roles-grid">
+      <div class="role-box">
+        <strong><i class="bi bi-shield-check" aria-hidden="true"></i> Propietario</strong>
+        <p>Todos los permisos: ver, registrar, editar y eliminar datos, crear módulos, administrar el equipo y la configuración.</p>
       </div>
-      <div class="field">
-        <label for="tm-rol">Rol</label>
-        <select id="tm-rol" [ngModel]="rol()" (ngModelChange)="rol.set($event)" name="rol">
-          @for (r of roles; track r) {
-            <option [value]="r">{{ r }}</option>
-          }
-        </select>
+      <div class="role-box">
+        <strong><i class="bi bi-person-badge" aria-hidden="true"></i> Empleado</strong>
+        <p>Solo puede ver y registrar datos en los módulos que tú le habilites. No edita ni elimina, ni accede a equipo o configuración.</p>
       </div>
-      <button type="submit" class="btn-primary"><i class="bi bi-send" aria-hidden="true"></i> Enviar invitación</button>
     </div>
+  </section>
+
+  <form class="card invite" novalidate (submit)="invitar($event)">
+    <h2>Invitar a un empleado</h2>
+    <div class="field">
+      <label for="tm-correo">Correo electrónico</label>
+      <input id="tm-correo" type="email" autocomplete="off" placeholder="persona@correo.com" [value]="correo()" (input)="escribirCorreo($event)"
+        [attr.aria-invalid]="error() ? true : null" [attr.aria-describedby]="error() ? 'tm-error' : null" />
+    </div>
+
+    <fieldset class="modules">
+      <legend>Módulos a los que puede acceder</legend>
+      <div class="module-options">
+        @for (m of modulosDisponibles(); track m.clave) {
+          <label class="module-option" [class.on]="modulosNuevos().includes(m.clave)">
+            <input type="checkbox" [checked]="modulosNuevos().includes(m.clave)" (change)="alternarNuevo(m.clave)" />
+            <i class="bi" [class]="m.icono" aria-hidden="true"></i> {{ m.nombre }}
+          </label>
+        }
+      </div>
+    </fieldset>
+
     @if (error()) {
       <span class="error" id="tm-error" role="alert">{{ error() }}</span>
     }
+    <div><button type="submit" class="btn-primary"><i class="bi bi-send" aria-hidden="true"></i> Enviar invitación</button></div>
   </form>
 
   <section class="card">
@@ -42,18 +59,22 @@
             <span>{{ m.correo }}</span>
           </div>
           <span class="state" [class.pending]="m.estado !== 'Activo'">{{ m.estado }}</span>
-          @if (m.rol === 'Propietario') {
-            <span class="role-fixed">Propietario</span>
-          } @else {
-            <label class="sr-only" [for]="'rol-' + m.id">Rol de {{ m.nombre }}</label>
-            <select class="role-select" [id]="'rol-' + m.id" [value]="m.rol" (change)="cambiarRol(m.id, $any($event.target).value)">
-              @for (r of roles; track r) {
-                <option [value]="r" [selected]="m.rol === r">{{ r }}</option>
-              }
-            </select>
+          <span class="role-fixed">{{ m.rol }}</span>
+          @if (m.rol !== 'Propietario') {
             <button type="button" class="icon-btn" [attr.aria-label]="'Quitar a ' + m.nombre" title="Quitar" (click)="quitar(m.id)">
               <i class="bi bi-trash3" aria-hidden="true"></i>
             </button>
+            <div class="member-modules">
+              <span class="member-modules-label">Acceso a:</span>
+              @for (mod of modulosDisponibles(); track mod.clave) {
+                <button type="button" class="chip" [class.on]="m.modulos.includes(mod.clave)" [attr.aria-pressed]="m.modulos.includes(mod.clave)"
+                  (click)="alternarModulo(m, mod.clave)">
+                  <i class="bi" [class]="m.modulos.includes(mod.clave) ? 'bi-check-lg' : 'bi-plus-lg'" aria-hidden="true"></i> {{ mod.nombre }}
+                </button>
+              }
+            </div>
+          } @else {
+            <div class="member-modules"><span class="member-modules-label">Acceso total a todos los módulos</span></div>
           }
         </li>
       }

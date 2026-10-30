@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, onboardingGuard, guestGuard } from './core/guards/auth-guard';
+import { permissionGuard } from './core/guards/permission-guard';
 
 import { Landing } from './features/landing/landing';
 import { Login } from './features/auth/pages/login/login';
@@ -58,26 +59,26 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: 'dashboard', component: Dashboard, data: { title: 'Dashboard' }, title: 'NexGest · Dashboard' },
-      { path: 'clientes', component: Clientes, data: { title: 'Clientes' }, title: 'NexGest · Clientes' },
-      { path: 'finanzas', component: Finanzas, data: { title: 'Finanzas' }, title: 'NexGest · Finanzas' },
-      { path: 'ventas', component: Ventas, data: { title: 'Ventas' }, title: 'NexGest · Ventas' },
-      { path: 'proveedores', component: Proveedores, data: { title: 'Proveedores' }, title: 'NexGest · Proveedores' },
-      { path: 'inventario', component: Inventario, data: { title: 'Inventario' }, title: 'NexGest · Inventario' },
-      { path: 'centroInteligencia', component: CentroInteligencia, data: { title: 'Centro de Inteligencia' }, title: 'NexGest · Centro de Inteligencia' },
-      { path: 'planAccion', component: PlanAccion, data: { title: 'Plan de Acción' }, title: 'NexGest · Plan de Acción' },
-      { path: 'configuracion', component: Settings, data: { title: 'Configuración' }, title: 'NexGest · Configuración' },
-      { path: 'equipo', component: TeamManagement, data: { title: 'Equipo' }, title: 'NexGest · Equipo' },
+      { path: 'clientes', component: Clientes, canActivate: [permissionGuard], data: { title: 'Clientes', modulo: 'clientes' }, title: 'NexGest · Clientes' },
+      { path: 'finanzas', component: Finanzas, canActivate: [permissionGuard], data: { title: 'Finanzas', modulo: 'finanzas' }, title: 'NexGest · Finanzas' },
+      { path: 'ventas', component: Ventas, canActivate: [permissionGuard], data: { title: 'Ventas', modulo: 'ventas' }, title: 'NexGest · Ventas' },
+      { path: 'proveedores', component: Proveedores, canActivate: [permissionGuard], data: { title: 'Proveedores', modulo: 'proveedores' }, title: 'NexGest · Proveedores' },
+      { path: 'inventario', component: Inventario, canActivate: [permissionGuard], data: { title: 'Inventario', modulo: 'inventario' }, title: 'NexGest · Inventario' },
+      { path: 'centroInteligencia', component: CentroInteligencia, canActivate: [permissionGuard], data: { title: 'Centro de Inteligencia', soloPropietario: true }, title: 'NexGest · Centro de Inteligencia' },
+      { path: 'planAccion', component: PlanAccion, canActivate: [permissionGuard], data: { title: 'Plan de Acción', soloPropietario: true }, title: 'NexGest · Plan de Acción' },
+      { path: 'configuracion', component: Settings, canActivate: [permissionGuard], data: { title: 'Configuración', soloPropietario: true }, title: 'NexGest · Configuración' },
+      { path: 'equipo', component: TeamManagement, canActivate: [permissionGuard], data: { title: 'Equipo', soloPropietario: true }, title: 'NexGest · Equipo' },
       { path: 'notificacion', component: Notificaciones, data: { title: 'Notificaciones' }, title: 'NexGest · Notificaciones' },
       {
         path: 'custom-modules',
         children: [
-          { path: '', component: CustomModules, data: { title: 'Nuevo Módulo' }, title: 'NexGest · Módulos' },
+          { path: '', component: CustomModules, canActivate: [permissionGuard], data: { title: 'Nuevo Módulo', soloPropietario: true }, title: 'NexGest · Módulos' },
           // El título de la pestaña lo pone la propia pantalla con el nombre del módulo.
-          { path: ':id', component: CustomModuleDetail, data: { title: 'Mi módulo' } },
+          { path: ':id', component: CustomModuleDetail, canActivate: [permissionGuard], data: { title: 'Mi módulo', moduloDinamico: true } },
         ],
       },
     ],
   },
 
   { path: '**', component: NotFound, title: 'NexGest · Página no encontrada' },
-];
+];

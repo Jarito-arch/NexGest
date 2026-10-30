@@ -89,9 +89,9 @@
                         <td>
                             <div class="actions"><button type="button" title="Registrar entrada"
                                     aria-label="Registrar entrada" (click)="registrarEntrada(producto)"><i
-                                        class="bi bi-box-arrow-in-down"></i></button><button type="button"
-                                    title="Editar precio" aria-label="Editar precio"
-                                    (click)="editarProducto(producto)"><i class="bi bi-pencil"></i></button></div>
+                                        class="bi bi-box-arrow-in-down"></i></button>@if (permisos.puedeEditar()) {<button type="button"
+                                    title="Editar producto" aria-label="Editar producto"
+                                    (click)="editarProducto(producto)"><i class="bi bi-pencil"></i></button>}</div>
                         </td>
                     </tr>
                     <tr *ngIf="productosFiltrados.length === 0">
@@ -116,3 +116,80 @@
         </div>
     </section>
 </main>
+
+@if (dialogo === 'producto' || dialogo === 'editar') {
+    <app-dialog [titulo]="dialogo === 'editar' ? 'Editar producto' : 'Nuevo producto'" [ancho]="480" (cerrar)="cerrarDialogo()">
+        <div class="nx-form">
+            <label class="nx-field">
+                <span class="nx-label">Nombre del producto <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="errores.nombre" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Café americano"
+                    [value]="formProducto.nombre" (input)="formProducto.nombre = texto($event)">
+                @if (errores.nombre) { <span class="nx-error" role="alert">{{ errores.nombre }}</span> }
+            </label>
+            <label class="nx-field">
+                <span class="nx-label">Categoría</span>
+                <select class="nx-control" (change)="formProducto.categoria = $any($event.target).value">
+                    @for (categoria of categorias; track categoria) { <option [value]="categoria" [selected]="formProducto.categoria === categoria">{{ categoria }}</option> }
+                </select>
+            </label>
+            @if (dialogo === 'producto') {
+                <label class="nx-field">
+                    <span class="nx-label">Unidades iniciales</span>
+                    <input class="nx-control" [class.invalido]="errores.stock" type="number" min="0" step="1" inputmode="numeric"
+                        [value]="formProducto.stock ?? ''" (input)="formProducto.stock = numero($event)">
+                    @if (errores.stock) { <span class="nx-error" role="alert">{{ errores.stock }}</span> }
+                </label>
+            }
+            <label class="nx-field">
+                <span class="nx-label">Precio unitario (S/) <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="errores.precio" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0.00"
+                    [value]="formProducto.precio ?? ''" (input)="formProducto.precio = numero($event)">
+                @if (errores.precio) { <span class="nx-error" role="alert">{{ errores.precio }}</span> }
+            </label>
+            <div class="nx-actions">
+                <button type="button" class="nx-btn" (click)="cerrarDialogo()">Cancelar</button>
+                <button type="button" class="nx-btn nx-btn-primary" (click)="dialogo === 'editar' ? guardarEdicion() : guardarProducto()">{{ dialogo === 'editar' ? 'Guardar cambios' : 'Crear producto' }}</button>
+            </div>
+        </div>
+    </app-dialog>
+}
+
+@if (dialogo === 'entrada') {
+    <app-dialog titulo="Registrar entrada" [ancho]="440" (cerrar)="cerrarDialogo()">
+        <div class="nx-form">
+            <label class="nx-field">
+                <span class="nx-label">Producto</span>
+                <select class="nx-control" (change)="formEntrada.sku = $any($event.target).value">
+                    @for (producto of productos; track producto.sku) {
+                        <option [value]="producto.sku" [selected]="formEntrada.sku === producto.sku">{{ producto.nombre }} ({{ producto.stock }} en stock)</option>
+                    }
+                </select>
+            </label>
+            <label class="nx-field">
+                <span class="nx-label">Unidades que ingresan <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="errores.cantidad" type="number" min="1" step="1" inputmode="numeric" placeholder="Ej. 20"
+                    [value]="formEntrada.cantidad ?? ''" (input)="formEntrada.cantidad = numero($event)" (keydown.enter)="guardarEntrada()">
+                @if (errores.cantidad) { <span class="nx-error" role="alert">{{ errores.cantidad }}</span> }
+            </label>
+            <div class="nx-actions">
+                <button type="button" class="nx-btn" (click)="cerrarDialogo()">Cancelar</button>
+                <button type="button" class="nx-btn nx-btn-primary" (click)="guardarEntrada()">Registrar entrada</button>
+            </div>
+        </div>
+    </app-dialog>
+}
+
+@if (dialogo === 'movimientos') {
+    <app-dialog titulo="Movimientos de inventario" [ancho]="520" (cerrar)="cerrarDialogo()">
+        @if (movimientos.length === 0) {
+            <p class="nx-empty">Aún no hay movimientos registrados.</p>
+        } @else {
+            <ul class="nx-list">
+                @for (movimiento of movimientos; track $index) {
+                    <li><span><strong>+{{ movimiento.cantidad }}</strong> · {{ movimiento.producto }}</span><small>{{ movimiento.fecha }}</small></li>
+                }
+            </ul>
+        }
+        <div class="nx-actions"><button type="button" class="nx-btn" (click)="cerrarDialogo()">Cerrar</button></div>
+    </app-dialog>
+}

@@ -1,5 +1,6 @@
 import { Service, inject, signal, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Equipo } from './equipo';
 
 export interface ModuleFieldDef {
     /** Clave estable del campo; se usa como propiedad en cada registro. */
@@ -39,6 +40,7 @@ const recordsKey = (moduleId: number) => `nexgest-custom-records-${moduleId}`;
 @Service()
 export class Tenant {
     private platformId = inject(PLATFORM_ID);
+    private equipo = inject(Equipo);
 
     readonly customModules = signal<CustomModule[]>([
         {
@@ -92,6 +94,25 @@ export class Tenant {
     toggleCustomModule(module: CustomModule): void {
         this.customModules.update(current => current.map(item => item.id === module.id ? { ...item, activo: !item.activo } : item));
         this.persistModules();
+    }
+
+    /** Elimina el módulo con todos sus registros y le quita el acceso a los empleados. */
+    removeCustomModule(id: number): void {
+        this.customModules.update(current => current.filter(item => item.id !== id));
+        this.persistModules();
+        this.recordsByModule.update(current => {
+            const resto = { ...current };
+            delete resto[id];
+            return resto;
+        });
+        if (isPlatformBrowser(this.platformId)) {
+            try {
+                localStorage.removeItem(recordsKey(id));
+            } catch {
+                // Si no se puede borrar, los registros quedan huérfanos pero ya no se muestran.
+            }
+        }
+        this.equipo.revocarModulo(`custom:${id}`);
     }
 
     // ----- Registros de cada módulo -----

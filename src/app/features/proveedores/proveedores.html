@@ -44,7 +44,7 @@
                             <th>TELÉFONO</th>
                             <th>CORREO</th>
                             <th>DIRECCIÓN</th>
-                            <th>ACCIONES</th>
+                            @if (permisos.puedeEditar()) {<th>ACCIONES</th>}
                         </tr>
                     </thead>
                     <tbody>
@@ -57,9 +57,9 @@
                             <td>{{ proveedor.correo || 'Sin registrar' }}</td>
                             <td>{{ proveedor.direccion || 'Sin registrar' }}</td>
                             <td>
-                                <div class="actions"><button type="button"
+                                @if (permisos.puedeEditar()) {<div class="actions"><button type="button"
                                         [attr.aria-label]="'Eliminar ' + proveedor.nombre" title="Eliminar"
-                                        (click)="eliminar(proveedor)"><i class="bi bi-trash3"></i></button></div>
+                                        (click)="eliminar(proveedor)"><i class="bi bi-trash3"></i></button></div>}
                             </td>
                         </tr>
                         <tr *ngIf="proveedoresFiltrados.length === 0">
@@ -94,3 +94,47 @@
                 proveedores</strong><span>sin dirección registrada</span></div>
     </section>
 </main>
+
+@if (formAbierto) {
+    <app-dialog titulo="Nuevo proveedor" [ancho]="480" (cerrar)="cerrarFormulario()">
+        <div class="nx-form">
+            <label class="nx-field">
+                <span class="nx-label">Nombre del proveedor <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="errores.nombre" type="text" maxlength="80" autocomplete="off" placeholder="Ej. Tostaduría Central"
+                    [value]="formProveedor.nombre" (input)="formProveedor.nombre = texto($event)" (keydown.enter)="guardarProveedor()">
+                @if (errores.nombre) { <span class="nx-error" role="alert">{{ errores.nombre }}</span> }
+            </label>
+            <label class="nx-field">
+                <span class="nx-label">Teléfono</span>
+                <input class="nx-control" [class.invalido]="errores.telefono" type="tel" maxlength="20" autocomplete="off" placeholder="Opcional"
+                    [value]="formProveedor.telefono" (input)="formProveedor.telefono = texto($event)" (keydown.enter)="guardarProveedor()">
+                @if (errores.telefono) { <span class="nx-error" role="alert">{{ errores.telefono }}</span> }
+            </label>
+            <label class="nx-field">
+                <span class="nx-label">Correo electrónico</span>
+                <input class="nx-control" [class.invalido]="errores.correo" type="email" maxlength="120" autocomplete="off" placeholder="Opcional"
+                    [value]="formProveedor.correo" (input)="formProveedor.correo = texto($event)" (keydown.enter)="guardarProveedor()">
+                @if (errores.correo) { <span class="nx-error" role="alert">{{ errores.correo }}</span> }
+            </label>
+            <label class="nx-field">
+                <span class="nx-label">Dirección</span>
+                <input class="nx-control" type="text" maxlength="160" autocomplete="off" placeholder="Opcional"
+                    [value]="formProveedor.direccion" (input)="formProveedor.direccion = texto($event)" (keydown.enter)="guardarProveedor()">
+            </label>
+            <div class="nx-actions">
+                <button type="button" class="nx-btn" (click)="cerrarFormulario()">Cancelar</button>
+                <button type="button" class="nx-btn nx-btn-primary" (click)="guardarProveedor()">Crear proveedor</button>
+            </div>
+        </div>
+    </app-dialog>
+}
+
+@if (proveedorAEliminar) {
+    <app-dialog titulo="Eliminar proveedor" [ancho]="420" (cerrar)="proveedorAEliminar = null">
+        <p class="nx-text">¿Seguro que quieres eliminar a <strong>{{ proveedorAEliminar.nombre }}</strong>? Esta acción no se puede deshacer.</p>
+        <div class="nx-actions">
+            <button type="button" class="nx-btn" (click)="proveedorAEliminar = null">Cancelar</button>
+            <button type="button" class="nx-btn nx-btn-danger" (click)="confirmarEliminar()">Sí, eliminar</button>
+        </div>
+    </app-dialog>
+}

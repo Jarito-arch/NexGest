@@ -487,6 +487,39 @@
     color: #12786a;
 }
 
+.module-delete:hover {
+    border-color: #d94c4c;
+    background: #fff0ed;
+    color: #d94c4c;
+}
+
+.confirm-text {
+    margin: 0 0 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.danger-button {
+    min-height: 39px;
+    padding: 9px 14px;
+    border: 1px solid #d94c4c;
+    border-radius: 9px;
+    background: #d94c4c;
+    color: #fff;
+    font: 700 12px Inter, system-ui, sans-serif;
+    cursor: pointer;
+}
+
+.danger-button:hover {
+    background: #b93c3c;
+}
+
 .module-empty {
     padding: 35px 15px;
     color: #9b968d;

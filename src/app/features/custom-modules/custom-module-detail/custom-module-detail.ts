@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { map } from 'rxjs';
 
@@ -8,6 +8,7 @@ import { ModuleFieldDef, ModuleRecord, Tenant, fieldKey } from '../../../core/se
 import { DataTable, TableColumn, TableRow, TableSort, formatearValor } from '../../../shared/components/data-table/data-table';
 import { DynamicForm, FormFieldDef } from '../../../shared/components/dynamic-form/dynamic-form';
 import { Dialog } from '../../../shared/components/dialog/dialog';
+import { Permisos } from '../../../core/services/permisos';
 
 @Component({
   imports: [RouterLink, DataTable, DynamicForm, Dialog],
@@ -19,6 +20,8 @@ export class CustomModuleDetail {
   private tenant = inject(Tenant);
   private route = inject(ActivatedRoute);
   private titulo = inject(Title);
+  private router = inject(Router);
+  readonly permisos = inject(Permisos);
 
   readonly id = toSignal(this.route.paramMap.pipe(map((p) => Number(p.get('id')))), { initialValue: NaN });
   readonly modulo = computed(() => this.tenant.customModules().find((m) => m.id === this.id()));
@@ -41,6 +44,7 @@ export class CustomModuleDetail {
   readonly formAbierto = signal(false);
   readonly editando = signal<ModuleRecord | null>(null);
   readonly eliminando = signal<TableRow | null>(null);
+  readonly eliminandoModulo = signal(false);
 
   /** Opciones del campo "Relación": registros del módulo relacionado, si es otro módulo propio. */
   private readonly opcionesRelacion = computed(() => {
@@ -90,6 +94,7 @@ export class CustomModuleDetail {
         this.orden.set(null);
         this.formAbierto.set(false);
         this.eliminando.set(null);
+        this.eliminandoModulo.set(false);
         this.aviso.set('');
       });
     });
@@ -97,6 +102,13 @@ export class CustomModuleDetail {
       const modulo = this.modulo();
       this.titulo.setTitle(modulo ? `NexGest · ${modulo.nombre}` : 'NexGest · Módulo no encontrado');
     });
+  }
+
+  confirmarEliminarModulo(): void {
+    const id = this.id();
+    this.eliminandoModulo.set(false);
+    this.tenant.removeCustomModule(id);
+    this.router.navigate(['/custom-modules']);
   }
 
   alternar(): void {

@@ -67,7 +67,7 @@ app-root {
 
 /* ===== Transición suave al cambiar de pantalla ===== */
 router-outlet + * {
-  animation: nx-fade-in 0.18s ease both;
+  animation: nx-fade-in 0.18s ease backwards;
 }
 
 @keyframes nx-fade-in {
@@ -98,3 +98,25 @@ textarea:focus-visible {
   outline: 2px solid var(--nx-primary) !important;
   outline-offset: 1px;
 }
+
+/* ===== Formularios dentro de modales (clientes, finanzas) ===== */
+.nx-form { display: grid; gap: 14px; }
+.nx-field { display: grid; gap: 5px; }
+.nx-label { font-size: 13px; font-weight: 600; color: var(--nx-ink); }
+.nx-req { color: var(--nx-danger); }
+.nx-control { width: 100%; min-height: 42px; padding: 8px 12px; border: 1px solid var(--nx-border); border-radius: var(--nx-radius); background: var(--nx-surface); color: var(--nx-ink); font: 14px var(--nx-font); box-sizing: border-box; }
+.nx-control:focus { border-color: var(--nx-primary); box-shadow: 0 0 0 3px rgba(21, 156, 135, 0.18); }
+.nx-control.invalido { border-color: var(--nx-danger); }
+.nx-error { font-size: 12px; font-weight: 600; color: var(--nx-danger); }
+.nx-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.nx-btn { min-height: 40px; padding: 0 16px; border: 1px solid var(--nx-border); border-radius: 9px; background: #fff; color: var(--nx-ink); font: 600 13px var(--nx-font); cursor: pointer; }
+.nx-btn-primary { border-color: var(--nx-primary); background: var(--nx-primary); color: #fff; }
+.nx-btn-primary:hover { background: var(--nx-primary-dark); }
+
+.nx-empty { margin: 0 0 8px; font-size: 14px; color: var(--nx-muted); }
+.nx-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.nx-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--nx-primary-soft); font-size: 14px; }
+.nx-list small { color: var(--nx-muted); }
+.nx-text { margin: 0 0 4px; font-size: 14px; line-height: 1.5; }
+.nx-btn-danger { border-color: var(--nx-danger); background: var(--nx-danger); color: #fff; }
+.nx-btn-danger:hover { background: #b93c3c; }

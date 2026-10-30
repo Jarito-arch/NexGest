@@ -78,7 +78,17 @@
   font-size: 12px;
   font-weight: 700;
 
+  text-decoration: none;
   box-shadow: 0 4px 10px rgba(21, 156, 135, 0.25);
+}
+
+a.profile {
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+a.profile:hover {
+  background-color: #12786a;
 }
 
 .logout {

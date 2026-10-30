@@ -1,10 +1,11 @@
-import { Component, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Auth } from '../../../core/services/auth';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { LongDatePipe } from '../../../shared/pipes/long-date-pipe';
-import { Notificaciones } from '../../../core/services/notificaciones';
+import { OnboardingService } from '../../../core/services/onboarding-state';
+import { Permisos } from '../../../core/services/permisos';
 
 
 @Component({
@@ -17,7 +18,15 @@ export class Topbar {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   readonly auth = inject(Auth);
-  readonly avisos = inject(Notificaciones);
+  readonly permisos = inject(Permisos);
+  private readonly negocio = inject(OnboardingService);
+
+  /** Iniciales del negocio ("Café Aurora" → "CA"); si aún no tiene nombre, las de la persona. */
+  readonly iniciales = computed(() => {
+    const palabras = this.negocio.businessName().trim().split(/\s+/).filter(Boolean);
+    if (!palabras.length) return this.auth.initials();
+    return (palabras[0][0] + (palabras[1]?.[0] ?? palabras[0][1] ?? '')).toUpperCase();
+  });
 
   /** Estado del menú lateral en móvil y evento para abrirlo/cerrarlo. */
   menuAbierto = input(false);

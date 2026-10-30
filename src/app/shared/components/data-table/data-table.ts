@@ -47,6 +47,8 @@ export class DataTable {
   orden = input<TableSort | null>(null);
   /** Texto accesible que describe la tabla. */
   descripcion = input('Tabla de registros');
+  /** Sin botones de editar ni eliminar (empleados). */
+  soloLectura = input(false);
 
   ordenar = output<string>();
   editar = output<TableRow>();

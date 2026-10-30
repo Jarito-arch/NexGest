@@ -58,18 +58,17 @@
 
                 <div class="buscador">
                     <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Buscar por nombre, teléfono o email" [(ngModel)]="busqueda"
-                        (input)="filtrarClientes()">
+                    <input type="text" placeholder="Buscar por nombre, teléfono o email" [value]="busqueda" (input)="busqueda = texto($event); filtrarClientes()">
                 </div>
 
-                <select [(ngModel)]="estadoSeleccionado" (change)="filtrarClientes()">
+                <select (change)="estadoSeleccionado = $any($event.target).value; filtrarClientes()">
                     <option value="Todos">Todos los estados</option>
                     <option value="Frecuente">Frecuente</option>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
                 </select>
 
-                <select [(ngModel)]="periodoSeleccionado">
+                <select (change)="periodoSeleccionado = $any($event.target).value">
                     <option value="30">Últimos 30 días</option>
                     <option value="7">Últimos 7 días</option>
                     <option value="90">Últimos 90 días</option>
@@ -119,12 +118,14 @@
                                     <button title="Ver cliente" (click)="verCliente(cliente)">
                                         <i class="bi bi-eye"></i>
                                     </button>
+                                    @if (permisos.puedeEditar()) {
                                     <button title="Editar cliente" (click)="editarCliente(cliente)">
                                         <i class="bi bi-pencil"></i>
                                     </button>
                                     <button title="Eliminar cliente" (click)="eliminarCliente(cliente)">
                                         <i class="bi bi-trash3"></i>
                                     </button>
+                                    }
 
                                 </div>
                             </td>
@@ -262,3 +263,60 @@
     </section>
 
 </div>
+
+@if (formAbierto) {
+    <app-dialog [titulo]="editando ? 'Editar cliente' : 'Nuevo cliente'" [ancho]="480" (cerrar)="cerrarFormulario()">
+        <div class="nx-form">
+            <label class="nx-field">
+                <span class="nx-label">Nombre completo <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="erroresCliente.nombre" type="text" maxlength="80" autocomplete="off"
+                    [value]="formCliente.nombre" (input)="formCliente.nombre = texto($event)" (keydown.enter)="guardarCliente()" placeholder="Ej. María Alvarado">
+                @if (erroresCliente.nombre) { <span class="nx-error" role="alert">{{ erroresCliente.nombre }}</span> }
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Teléfono <b class="nx-req">*</b></span>
+                <input class="nx-control" [class.invalido]="erroresCliente.telefono" type="tel" maxlength="20" autocomplete="off"
+                    [value]="formCliente.telefono" (input)="formCliente.telefono = texto($event)" (keydown.enter)="guardarCliente()" placeholder="Ej. 987 654 321">
+                @if (erroresCliente.telefono) { <span class="nx-error" role="alert">{{ erroresCliente.telefono }}</span> }
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Correo electrónico</span>
+                <input class="nx-control" [class.invalido]="erroresCliente.email" type="email" maxlength="120" autocomplete="off"
+                    [value]="formCliente.email" (input)="formCliente.email = texto($event)" (keydown.enter)="guardarCliente()" placeholder="Opcional">
+                @if (erroresCliente.email) { <span class="nx-error" role="alert">{{ erroresCliente.email }}</span> }
+            </label>
+
+            <label class="nx-field">
+                <span class="nx-label">Estado</span>
+                <select class="nx-control" (change)="formCliente.estado = $any($event.target).value">
+                    @for (estado of estadosCliente; track estado) { <option [value]="estado" [selected]="formCliente.estado === estado">{{ estado }}</option> }
+                </select>
+            </label>
+
+            <div class="nx-actions">
+                <button type="button" class="nx-btn" (click)="cerrarFormulario()">Cancelar</button>
+                <button type="button" class="nx-btn nx-btn-primary" (click)="guardarCliente()">{{ editando ? 'Guardar cambios' : 'Crear cliente' }}</button>
+            </div>
+        </div>
+    </app-dialog>
+}
+
+@if (viendo) {
+    <app-dialog titulo="Detalle del cliente" [ancho]="440" (cerrar)="viendo = null">
+        <div class="cd-head">
+            <span class="cd-avatar">{{ obtenerIniciales(viendo.nombre) }}</span>
+            <div>
+                <strong>{{ viendo.nombre }}</strong>
+                <span class="cd-estado">{{ viendo.estado }}</span>
+            </div>
+        </div>
+        <dl class="cd-list">
+            <div><dt>Teléfono</dt><dd>{{ viendo.telefono }}</dd></div>
+            <div><dt>Correo</dt><dd>{{ viendo.email || 'Sin correo registrado' }}</dd></div>
+            <div><dt>Compras</dt><dd>{{ viendo.compras }}</dd></div>
+            <div><dt>Última compra</dt><dd>{{ viendo.ultimaCompra }}</dd></div>
+        </dl>
+    </app-dialog>
+}

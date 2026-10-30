@@ -298,3 +298,15 @@
     flex: 1;
   }
 }
+
+.module-header .btn-danger {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+  background: var(--nx-surface);
+  color: var(--nx-danger);
+}
+
+.module-header .btn-danger:hover {
+  background: var(--nx-danger-soft);
+}

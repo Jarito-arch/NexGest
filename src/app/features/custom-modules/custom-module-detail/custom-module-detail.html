@@ -13,10 +13,13 @@
         <p>{{ m.descripcion }}</p>
         <span class="module-category"><i class="bi bi-folder2" aria-hidden="true"></i> {{ m.categoria }}</span>
       </div>
+      @if (permisos.esPropietario()) {
       <button type="button" role="switch" class="switch" [attr.aria-checked]="m.activo" aria-label="Módulo activo" (click)="alternar()">
         <span class="switch-track" aria-hidden="true"></span>
         <span>{{ m.activo ? 'Activo' : 'Pausado' }}</span>
       </button>
+      <button type="button" class="btn-danger" (click)="eliminandoModulo.set(true)"><i class="bi bi-trash3" aria-hidden="true"></i> Eliminar módulo</button>
+      }
     </header>
 
     @if (!m.activo) {
@@ -53,13 +56,23 @@
       </section>
     } @else {
       <app-data-table [columnas]="columnas()" [filas]="filtrados()" [orden]="orden()" [descripcion]="'Registros de ' + m.nombre"
-        (ordenar)="ordenar($event)" (editar)="editar($event)" (eliminar)="pedirEliminar($event)" />
+        [soloLectura]="!permisos.puedeEditar()" (ordenar)="ordenar($event)" (editar)="editar($event)" (eliminar)="pedirEliminar($event)" />
     }
 
     @if (formAbierto()) {
       <app-dialog [titulo]="editando() ? 'Editar registro' : 'Nuevo registro'" (cerrar)="cerrarFormulario()">
         <app-dynamic-form [campos]="camposForm()" [valores]="editando()" [etiquetaGuardar]="editando() ? 'Guardar cambios' : 'Crear registro'"
           (guardar)="guardar($event)" (cancelar)="cerrarFormulario()" />
+      </app-dialog>
+    }
+
+    @if (eliminandoModulo()) {
+      <app-dialog titulo="Eliminar módulo" [ancho]="440" (cerrar)="eliminandoModulo.set(false)">
+        <p class="confirm-text">¿Seguro que quieres eliminar <strong>{{ m.nombre }}</strong>? Se borrarán también todos sus registros y los empleados perderán el acceso. Esta acción no se puede deshacer.</p>
+        <div class="confirm-actions">
+          <button type="button" class="btn-ghost" (click)="eliminandoModulo.set(false)">Cancelar</button>
+          <button type="button" class="btn-danger" (click)="confirmarEliminarModulo()">Sí, eliminar módulo</button>
+        </div>
       </app-dialog>
     }
 

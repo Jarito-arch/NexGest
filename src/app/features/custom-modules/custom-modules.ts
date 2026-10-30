@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CustomModule, Tenant } from '../../core/services/tenant';
+import { Dialog } from '../../shared/components/dialog/dialog';
 
 type FieldType = 'Texto' | 'Número' | 'Moneda' | 'Fecha' | 'Hora' | 'Booleano' | 'Selección' | 'Archivo' | 'Relación';
 
@@ -14,7 +15,7 @@ interface ModuleField {
 }
 
 @Component({
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, Dialog],
   selector: 'app-custom-modules',
   styleUrls: ['./custom-modules.css', './custom-modules-steps.css'],
   templateUrl: './custom-modules.html',
@@ -119,6 +120,21 @@ export class CustomModules {
 
   abrirModulo(): void {
     if (this.moduloCreado) this.router.navigate(['/custom-modules', this.moduloCreado.id]);
+  }
+
+  /** Módulo que se está por eliminar (pide confirmación). */
+  moduloAEliminar: CustomModule | null = null;
+
+  pedirEliminar(modulo: CustomModule): void {
+    this.moduloAEliminar = modulo;
+  }
+
+  confirmarEliminar(): void {
+    const modulo = this.moduloAEliminar;
+    if (!modulo) return;
+    this.tenant.removeCustomModule(modulo.id);
+    if (this.moduloCreado?.id === modulo.id) this.moduloCreado = null;
+    this.moduloAEliminar = null;
   }
 
   alternar(modulo: CustomModule): void {
